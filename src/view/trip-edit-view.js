@@ -160,7 +160,7 @@ function createTripEditFormTemplate() {
   );
 }
 
-export default class FormTripEditView {
+export default class TripEditView {
   getTemplate() {
     return createTripEditFormTemplate();
   }

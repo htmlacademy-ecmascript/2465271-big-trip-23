@@ -167,7 +167,7 @@ function createTripFormTemplate() {
   );
 }
 
-export default class FormTripCreateView {
+export default class TripCreateView {
   getTemplate() {
     return createTripFormTemplate();
   }

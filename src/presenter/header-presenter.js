@@ -1,9 +1,9 @@
-import FilterView from '../view/trip-filter-view';
+import TripFilterView from '../view/trip-filter-view';
 import TripInfoView from '../view/trip-info-view';
 import { render, RenderPosition } from '../render';
 
 export default class HeaderPagePresenter {
-  eventFilterComponent = new FilterView();
+  eventFilterComponent = new TripFilterView();
   eventInfoComponent = new TripInfoView();
 
   constructor({boardContainer}) {
