@@ -1,26 +1,45 @@
 import TripListView from '../view/trip-list-view';
-import SortView from '../view/trip-sort-view';
-import FormTripEditView from '../view/trip-edit-view';
-import FormTripCreateView from '../view/trip-create-view';
+import TripSortView from '../view/trip-sort-view';
+import TripEditView from '../view/trip-edit-view';
+import TripCreateView from '../view/trip-create-view';
 import TripPointView from '../view/trip-point-view';
 import { render } from '../render';
 
 export default class MainPagePresenter {
-  eventSortComponent = new SortView();
+  eventSortComponent = new TripSortView();
   eventListComponent = new TripListView();
 
-  constructor({boardContainer}) {
+  constructor({boardContainer, eventModel}) {
     this.boardContainer = boardContainer;
+    this.eventModel = eventModel;
   }
 
   init() {
+    this.eventOffers = [...this.eventModel.getOffers()];
+    this.eventDestinations = [...this.eventModel.getDestinations()];
+
     render(this.eventSortComponent, this.boardContainer);
     render(this.eventListComponent, this.boardContainer);
-    render(new FormTripEditView(), this.eventListComponent.getElement());
-    render(new FormTripCreateView(), this.eventListComponent.getElement());
+    render(new TripEditView
+    (
+      {offerData: this.eventOffers},
+      {destinationData: this.eventDestinations},
+    )
+    , this.eventListComponent.getElement());
+    render(new TripCreateView
+    (
+      {offerData: this.eventOffers},
+      {destinationData: this.eventDestinations},
+    )
+    , this.eventListComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new TripPointView(), this.eventListComponent.getElement());
+    for (let i = 2; i < 9; i++) {
+      render(new TripPointView
+      (
+        {offerData: this.eventOffers[i]},
+        {destinationData: this.eventDestinations[i]},
+      )
+      , this.eventListComponent.getElement());
     }
   }
 }

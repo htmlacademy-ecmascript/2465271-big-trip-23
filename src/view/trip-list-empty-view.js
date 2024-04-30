@@ -8,7 +8,7 @@ const PageMessageTextType = {
   [FilterType.PAST]: 'There are no past events now',
 };
 
-function createNoTaskTemplate(filterType = FilterType.EVERYTHING) {
+const createTripListEmptyTemplate = (filterType = FilterType.EVERYTHING) => {
   const currentPageMessageTextTipe = PageMessageTextType[filterType];
 
   return (
@@ -16,10 +16,10 @@ function createNoTaskTemplate(filterType = FilterType.EVERYTHING) {
       ${currentPageMessageTextTipe}
     </p>`
   );
-}
-export default class PageMessageTextView {
+};
+export default class TripListEmptyView {
   getTemplate() {
-    return createNoTaskTemplate();
+    return createTripListEmptyTemplate();
   }
 
   getElement() {
