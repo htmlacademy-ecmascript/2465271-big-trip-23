@@ -9,8 +9,10 @@ const createTripPointTemplate = (offerData, destinationData) => {
   const startTime = displayEventTime(dataFrom);
   const endTime = displayEventTime(dataTo);
   const eventDay = displayEventDate(dataFrom);
-  const eventDuration = dayjs(dataFrom);
-  const duration = eventDuration.diff(dataTo, 'h');
+  const dayDuration = dayjs(dataTo).diff(dataFrom, 'd');
+  const hourDuration = dayjs(dataTo).diff(dataFrom, 'h') % 24;
+  const minuteDuration = dayjs(dataTo).diff(dataFrom, 'm') % 60;
+  const totalDuration = `${dayDuration}D ${hourDuration}H ${minuteDuration}M`;
 
   const createOffersData = (option, price) =>
     `<li class="event__offer">
@@ -34,7 +36,7 @@ const createTripPointTemplate = (offerData, destinationData) => {
           &mdash;
           <time class="event__end-time" datetime=${dataTo}>${endTime}</time>
         </p>
-        <p class="event__duration">${duration}</p>
+        <p class="event__duration">${totalDuration}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

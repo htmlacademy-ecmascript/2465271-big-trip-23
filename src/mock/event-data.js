@@ -54,7 +54,7 @@ const destinationsMockData = [
   {
     destination: 'Khabarovsk',
     dataFrom: '2019-07-10T22:55:56.845Z',
-    dataTo: '2019-07-10T22:55:56.845Z',
+    dataTo: '2019-07-11T20:55:56.845Z',
     isFavorite: true,
     basePrice: 150
   },
@@ -67,7 +67,7 @@ const destinationsMockData = [
       getRandomDescriptionPhoto()
     ],
     dataFrom: '2024-07-10T22:55:56.845Z',
-    dataTo: '2024-07-10T22:55:56.845Z',
+    dataTo: '2024-07-12T12:55:56.845Z',
     isFavorite: true,
     basePrice: 250
   },
@@ -89,8 +89,8 @@ const destinationsMockData = [
   {
     destination: 'Caracas',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-    dataFrom: '2014-07-10T22:55:56.845Z',
-    dataTo: '2019-07-10T22:55:56.845Z',
+    dataFrom: '2014-07-10T07:55:56.845Z',
+    dataTo: '2019-07-10T09:42:56.845Z',
     isFavorite: false,
     basePrice: 100
   },
