@@ -17,27 +17,33 @@ export default class MainPagePresenter {
   init() {
     this.eventOffers = [...this.eventModel.getOffers()];
     this.eventDestinations = [...this.eventModel.getDestinations()];
+    this.eventPoints = [...this.eventModel.getPoints()];
 
     render(this.eventSortComponent, this.boardContainer);
     render(this.eventListComponent, this.boardContainer);
+
     render(new TripEditView
     (
       {offerData: this.eventOffers},
       {destinationData: this.eventDestinations},
+      {pointData: this.eventPoints},
     )
     , this.eventListComponent.getElement());
+
     render(new TripCreateView
     (
       {offerData: this.eventOffers},
       {destinationData: this.eventDestinations},
+      {pointData: this.eventPoints},
     )
     , this.eventListComponent.getElement());
 
-    for (let i = 2; i < 9; i++) {
+    for (let i = 2; i < this.eventPoints.length; i++) {
       render(new TripPointView
       (
         {offerData: this.eventOffers[i]},
         {destinationData: this.eventDestinations[i]},
+        {pointData: this.eventPoints[i]},
       )
       , this.eventListComponent.getElement());
     }

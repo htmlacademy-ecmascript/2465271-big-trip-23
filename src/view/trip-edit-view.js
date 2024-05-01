@@ -1,19 +1,35 @@
 import { createElement } from '../render';
+import { getFirstWordCapitalize, displayEditTime } from '../utils';
 
-const createTripEditFormTemplate = (offerData, destinationData) => {
+const createTripEditFormTemplate = (offerData, destinationData, pointData) => {
 
-  const {type, offers} = offerData[1];
-  const {destination, description, basePrice} = destinationData[1];
+  const {type, offers} = offerData.find((item, idx) => idx === 1);
+  const {name, description} = destinationData.find((item, idx) => idx === 1);
+  const {dataFrom, dataTo, basePrice} = pointData.find((item, idx) => idx === 1);
 
-  const createOffersData = (option, price, name) =>
+  const createOffersData = (title, price) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${name}-1" type="checkbox" name="event-offer-${name}">
-      <label class="event__offer-label" for="event-offer-${name}-1">
-        <span class="event__offer-title">${option}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${price}-1" type="checkbox" name="event-offer-${price}">
+      <label class="event__offer-label" for="event-offer-${price}-1">
+        <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${price}</span>
       </label>
     </div>`;
+
+  const createEventDestinationList = (destination) =>
+    `<option value="${destination}"></option>`;
+
+  const createEventTypeList = (lowerCaseType, upperCaseType, checked) =>
+    `<div class="event__type-item">
+      <input id="event-type-${lowerCaseType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}" ${checked}>
+      <label class="event__type-label  event__type-label--${lowerCaseType}" for="event-type-${lowerCaseType}-1">${upperCaseType}</label>
+    </div>`;
+
+  const startTime = displayEditTime(dataFrom);
+
+  const endTime = displayEditTime(dataTo);
+
 
   return (
     `<li class="trip-events__item">
@@ -29,46 +45,13 @@ const createTripEditFormTemplate = (offerData, destinationData) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-
-                <div class="event__type-item">
-                  <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                  <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                  <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                  <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                  <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                  <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                  <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                  <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                  <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-                </div>
+                  ${[...new Set(offerData)].map((elem) => {
+      if(elem.type === type) {
+        return createEventTypeList(elem.type, getFirstWordCapitalize(elem.type), 'checked');
+      } else {
+        return createEventTypeList(elem.type, getFirstWordCapitalize(elem.type));
+      }
+    }).join('')}
               </fieldset>
             </div>
           </div>
@@ -77,20 +60,18 @@ const createTripEditFormTemplate = (offerData, destinationData) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
             <datalist id="destination-list-1">
-              <option value="Amsterdam"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
+              ${[...new Set(destinationData)].map((elem) => createEventDestinationList(elem.name)).join('')}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -109,10 +90,10 @@ const createTripEditFormTemplate = (offerData, destinationData) => {
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">${offers ? 'Offer' : ''}</h3>
+            <h3 class="event__section-title  event__section-title--offers">${offers.find((item) => item.title) ? 'Offer' : ''}</h3>
 
             <div class="event__available-offers">
-            ${offers ? offers.map((offer) => createOffersData(offer.option, offer.price, offer.name)).join('') : ''}
+            ${offers.find((item) => item.title) ? offers.map((offer) => createOffersData(offer.title, offer.price)).join('') : ''}
             </div>
           </section>
 
@@ -128,13 +109,14 @@ const createTripEditFormTemplate = (offerData, destinationData) => {
 
 export default class TripEditView {
 
-  constructor({offerData}, {destinationData}) {
+  constructor({offerData}, {destinationData}, {pointData}) {
     this.offerData = offerData;
     this.destinationData = destinationData;
+    this.pointData = pointData;
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this.offerData, this.destinationData);
+    return createTripEditFormTemplate(this.offerData, this.destinationData, this.pointData);
   }
 
   getElement() {
