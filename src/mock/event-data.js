@@ -57,13 +57,13 @@ const offersMockData = [
 const destinationsMockData = [
   {
     id: '1',
-    description: 'Khabarovsk, is a beautiful city, a true asian pearl, with crowded streets.',
+    description: '',
     name: 'Khabarovsk',
     pictures: []
   },
   {
     id: '2',
-    description: 'Hamburg, is a beautiful city, a true asian pearl, with crowded streets.',
+    description: 'Hamburg, is a beautiful city, a true asian pearl, with crowded streets. Hamburg, is a beautiful city, a true asian pearl, with crowded streets. Hamburg, is a beautiful city, a true asian pearl, with crowded streets.',
     name: 'Hamburg',
     pictures: [
       {
@@ -86,7 +86,7 @@ const destinationsMockData = [
   },
   {
     id: '3',
-    description: 'Bangkok, is a beautiful city, a true asian pearl, with crowded streets.',
+    description: 'Bangkok, is a beautiful city, a true asian pearl, with crowded streets. Bangkok, is a beautiful city, a true asian pearl, with crowded streets. Bangkok, is a beautiful city, a true asian pearl, with crowded streets. Bangkok, is a beautiful city, a true asian pearl, with crowded streets.',
     name: 'Bangkok',
     pictures: [
       {
@@ -105,26 +105,13 @@ const destinationsMockData = [
   },
   {
     id: '4',
-    description: 'Caracas, is a beautiful city, a true asian pearl, with crowded streets.',
+    description: '',
     name: 'Caracas',
-    pictures: [
-      {
-        src: getRandomDescriptionPhoto(),
-        description: 'Random photo'
-      },
-      {
-        src: getRandomDescriptionPhoto(),
-        description: 'Random photo'
-      },
-      {
-        src: getRandomDescriptionPhoto(),
-        description: 'Random photo'
-      },
-    ]
+    pictures: []
   },
   {
     id: '5',
-    description: 'Dubai, is a beautiful city, a true asian pearl, with crowded streets.',
+    description: 'Dubai, is a beautiful city, a true asian pearl, with crowded streets. Dubai, is a beautiful city, a true asian pearl, with crowded streets. Dubai, is a beautiful city, a true asian pearl, with crowded streets. Dubai, is a beautiful city, a true asian pearl, with crowded streets.',
     name: 'Dubai',
     pictures: [
       {

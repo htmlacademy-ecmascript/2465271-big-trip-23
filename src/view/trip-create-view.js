@@ -18,6 +18,25 @@ const createTripFormTemplate = (offerData, destinationData, pointData) => {
       </label>
     </div>`;
 
+  const createOffersContainer = () =>
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offer</h3>
+      <div class="event__available-offers">
+      ${offers.map((offer) => createOffersData(offer.title, offer.price)).join('')}
+      </div>
+    </section>`;
+
+  const createDescriptionContainer = () =>
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${description}</p>
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${pictures.map((photo) => createPhotosData(photo)).join('')}
+        </div>
+      </div>
+    </section>`;
+
   const createEventDestinationList = (destination) =>
     `<option value="${destination}"></option>`;
 
@@ -86,24 +105,8 @@ const createTripFormTemplate = (offerData, destinationData, pointData) => {
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">${offers ? 'Offer' : ''}</h3>
-
-            <div class="event__available-offers">
-            ${offers.find((item) => item.title) ? offers.map((offer) => createOffersData(offer.title, offer.price)).join('') : ''}
-            </div>
-          </section>
-
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">${description || pictures ? 'Destination' : ''}</h3>
-            <p class="event__destination-description">${description ? description : ''}</p>
-
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-                ${pictures ? pictures.map((photo) => createPhotosData(photo)).join('') : ''}
-              </div>
-            </div>
-          </section>
+          ${offers.find((item) => item.title) ? createOffersContainer() : ''}
+          ${description || pictures.find((item) => item) ? createDescriptionContainer() : ''}
         </section>
       </form>
     </li>`);
