@@ -1,11 +1,18 @@
-import { getRandomOffer, getRandomDestination, getRandomPoint } from '../mock/event-data';
-
-const EVENT_COUNT = 9;
-
+import { offers } from '../mock/mock-offers';
+import { destinations } from '../mock/mock-destination';
+import { points } from '../mock/mock-points';
 export default class EventModel {
-  offers = Array.from({length: EVENT_COUNT}, getRandomOffer);
-  destinations = Array.from({length: EVENT_COUNT}, getRandomDestination);
-  points = Array.from({length: EVENT_COUNT}, getRandomPoint);
+  constructor () {
+    this.offers = [];
+    this.destinations = [];
+    this.points = [];
+  }
+
+  init() {
+    this.offers = offers;
+    this.destinations = destinations;
+    this.points = points;
+  }
 
   getOffers() {
     return this.offers;

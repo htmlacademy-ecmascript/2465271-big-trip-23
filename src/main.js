@@ -5,6 +5,7 @@ import EventModel from './model/event-model';
 const pageHeaderFiltersElement = document.querySelector('.trip-controls__filters');
 const pageMainTripEventElement = document.querySelector('.trip-events');
 const eventModel = new EventModel();
+eventModel.init();
 const mainPagePresenter = new MainPagePresenter({
   boardContainer: pageMainTripEventElement,
   eventModel,
