@@ -3,6 +3,7 @@ import TripSortView from '../view/trip-sort-view';
 import TripEditView from '../view/trip-edit-view';
 import TripCreateView from '../view/trip-create-view';
 import TripPointView from '../view/trip-point-view';
+import { getDefaultEventPoint } from '../utils';
 import { render } from '../render';
 
 export default class MainPagePresenter {
@@ -15,30 +16,24 @@ export default class MainPagePresenter {
   }
 
   init() {
-    this.eventOffers = [...this.eventModel.getOffers()];
-    this.eventDestinations = [...this.eventModel.getDestinations()];
+    const offers = this.eventModel.getOffers();
+    const destinations = this.eventModel.getDestinations();
+    const points = this.eventModel.getPoints();
 
     render(this.eventSortComponent, this.boardContainer);
     render(this.eventListComponent, this.boardContainer);
+
     render(new TripEditView
-    (
-      {offerData: this.eventOffers},
-      {destinationData: this.eventDestinations},
-    )
-    , this.eventListComponent.getElement());
-    render(new TripCreateView
-    (
-      {offerData: this.eventOffers},
-      {destinationData: this.eventDestinations},
-    )
+    (offers, destinations, points[3])
     , this.eventListComponent.getElement());
 
-    for (let i = 2; i < 9; i++) {
+    render(new TripCreateView
+    (offers, destinations, getDefaultEventPoint())
+    , this.eventListComponent.getElement());
+
+    for (const point of points) {
       render(new TripPointView
-      (
-        {offerData: this.eventOffers[i]},
-        {destinationData: this.eventDestinations[i]},
-      )
+      (offers, destinations, point)
       , this.eventListComponent.getElement());
     }
   }
