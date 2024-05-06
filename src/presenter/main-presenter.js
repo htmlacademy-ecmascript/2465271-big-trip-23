@@ -4,37 +4,39 @@ import TripEditView from '../view/trip-edit-view';
 import TripCreateView from '../view/trip-create-view';
 import TripPointView from '../view/trip-point-view';
 import { getDefaultEventPoint } from '../utils';
-import { render } from '../render';
+import { render } from '../framework/render';
 
 export default class MainPagePresenter {
-  eventSortComponent = new TripSortView();
-  eventListComponent = new TripListView();
+  #boardContainer = null;
+  #eventModel = null;
+  #eventSortComponent = new TripSortView();
+  #eventListComponent = new TripListView();
 
   constructor({boardContainer, eventModel}) {
-    this.boardContainer = boardContainer;
-    this.eventModel = eventModel;
+    this.#boardContainer = boardContainer;
+    this.#eventModel = eventModel;
   }
 
   init() {
-    const offers = this.eventModel.getOffers();
-    const destinations = this.eventModel.getDestinations();
-    const points = this.eventModel.getPoints();
+    const offers = this.#eventModel.offers;
+    const destinations = this.#eventModel.destinations;
+    const points = this.#eventModel.points;
 
-    render(this.eventSortComponent, this.boardContainer);
-    render(this.eventListComponent, this.boardContainer);
+    render(this.#eventSortComponent, this.#boardContainer);
+    render(this.#eventListComponent, this.#boardContainer);
 
     render(new TripEditView
     (offers, destinations, points[3])
-    , this.eventListComponent.getElement());
+    , this.#eventListComponent.element);
 
     render(new TripCreateView
     (offers, destinations, getDefaultEventPoint())
-    , this.eventListComponent.getElement());
+    , this.#eventListComponent.element);
 
     for (const point of points) {
       render(new TripPointView
       (offers, destinations, point)
-      , this.eventListComponent.getElement());
+      , this.#eventListComponent.element);
     }
   }
 }

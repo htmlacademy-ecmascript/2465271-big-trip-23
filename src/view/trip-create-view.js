@@ -1,6 +1,6 @@
-import { createElement } from '../render';
 import { getFirstWordCapitalize, displayEditTime } from '../utils';
 import { eventTypes } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 
 const createTripFormTemplate = (offers, destinations, point) => {
   const {basePrice, dateFrom, dateTo, type} = point;
@@ -107,27 +107,20 @@ const createTripFormTemplate = (offers, destinations, point) => {
       </form>
     </li>`);
 };
-export default class TripCreateView {
+export default class TripCreateView extends AbstractView {
+
+  #offers = null;
+  #destinations = null;
+  #point = null;
 
   constructor(offers, destinations, point) {
-    this.offers = offers;
-    this.destinations = destinations;
-    this.point = point;
+    super();
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createTripFormTemplate(this.offers, this.destinations, this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createTripFormTemplate(this.#offers, this.#destinations, this.#point);
   }
 }

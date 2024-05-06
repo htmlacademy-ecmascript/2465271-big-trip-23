@@ -1,5 +1,6 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
 import { displayEventTime, displayEventDate, getDuration } from '../utils';
+import TripCreateView from './trip-create-view';
 
 const createTripPointTemplate = (offers, destinations, point) => {
   const {dateFrom, dateTo, isFavorite, basePrice, type} = point;
@@ -51,27 +52,20 @@ const createTripPointTemplate = (offers, destinations, point) => {
   </li>`);
 };
 
-export default class TripPointView {
+export default class TripPointView extends TripCreateView {
+
+  #offers = null;
+  #destinations = null;
+  #point = null;
 
   constructor(offers, destinations, point) {
-    this.offers = offers;
-    this.destinations = destinations;
-    this.point = point;
+    super();
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createTripPointTemplate(this.offers, this.destinations, this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createTripPointTemplate(this.#offers, this.#destinations, this.#point);
   }
 }
