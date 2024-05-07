@@ -128,7 +128,7 @@ export default class TripEditView extends AbstractView {
     this.#point = point;
     this.#handleButtonSubmit = onButtonSubmit;
     this.#handleCloseButtonClick = onCloseButtonClick;
-    this.element.querySelector('.event__save-btn')
+    this.element.querySelector('.event--edit')
       .addEventListener('submit', this.#buttonSubmitHandler);
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#buttonEditFormCloseHandler);
