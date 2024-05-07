@@ -1,4 +1,3 @@
-// import { createElement } from '../render';
 import { getFirstWordCapitalize, displayEditTime } from '../utils';
 import { eventTypes } from '../const';
 import AbstractView from '../framework/view/abstract-view';

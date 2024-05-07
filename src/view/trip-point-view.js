@@ -1,4 +1,3 @@
-// import { createElement } from '../render';
 import { displayEventTime, displayEventDate, getDuration } from '../utils';
 import TripCreateView from './trip-create-view';
 

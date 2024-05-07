@@ -27,11 +27,6 @@ export default class MainPagePresenter {
 
     render(this.#eventSortComponent, this.#boardContainer);
     render(this.#eventListComponent, this.#boardContainer);
-
-    // render(new TripEditView
-    // (offers, destinations, points[3])
-    // , this.#eventListComponent.element);
-
     render(new TripCreateView
     (this.#offers, this.#destinations, getDefaultEventPoint())
     , this.#eventListComponent.element);
@@ -75,8 +70,7 @@ export default class MainPagePresenter {
     function replaceEditFormToPointForm () {
       replace(pointEventComponent, editEventComponent);
     }
-    // (offers, destinations, point)
-    // const pointElement = new TripPointView (offers, destinations, point);
+
     render(pointEventComponent, this.#eventListComponent.element);
   }
 }
