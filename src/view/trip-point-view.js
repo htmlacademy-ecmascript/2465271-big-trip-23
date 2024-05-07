@@ -57,15 +57,24 @@ export default class TripPointView extends TripCreateView {
   #offers = null;
   #destinations = null;
   #point = null;
+  #handleTripEditClick = null;
 
-  constructor(offers, destinations, point) {
+  constructor(offers, destinations, point, {onTripEditClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
+    this.#handleTripEditClick = onTripEditClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
     return createTripPointTemplate(this.#offers, this.#destinations, this.#point);
   }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleTripEditClick();
+  };
 }

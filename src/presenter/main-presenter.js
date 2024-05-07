@@ -4,13 +4,16 @@ import TripEditView from '../view/trip-edit-view';
 import TripCreateView from '../view/trip-create-view';
 import TripPointView from '../view/trip-point-view';
 import { getDefaultEventPoint } from '../utils';
-import { render } from '../framework/render';
+import { render, replace } from '../framework/render';
 
 export default class MainPagePresenter {
   #boardContainer = null;
   #eventModel = null;
   #eventSortComponent = new TripSortView();
   #eventListComponent = new TripListView();
+  #offers = [];
+  #destinations = [];
+  #points = [];
 
   constructor({boardContainer, eventModel}) {
     this.#boardContainer = boardContainer;
@@ -18,25 +21,62 @@ export default class MainPagePresenter {
   }
 
   init() {
-    const offers = this.#eventModel.offers;
-    const destinations = this.#eventModel.destinations;
-    const points = this.#eventModel.points;
+    this.#offers = this.#eventModel.offers;
+    this.#destinations = this.#eventModel.destinations;
+    this.#points = this.#eventModel.points;
 
     render(this.#eventSortComponent, this.#boardContainer);
     render(this.#eventListComponent, this.#boardContainer);
 
-    render(new TripEditView
-    (offers, destinations, points[3])
-    , this.#eventListComponent.element);
+    // render(new TripEditView
+    // (offers, destinations, points[3])
+    // , this.#eventListComponent.element);
 
     render(new TripCreateView
-    (offers, destinations, getDefaultEventPoint())
+    (this.#offers, this.#destinations, getDefaultEventPoint())
     , this.#eventListComponent.element);
 
-    for (const point of points) {
-      render(new TripPointView
-      (offers, destinations, point)
-      , this.#eventListComponent.element);
+    for (const point of this.#points) {
+      this.#renderPoint(this.#offers, this.#destinations, point);
     }
+  }
+
+  #renderPoint (offers, destinations, point) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceEditFormToPointForm();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const pointEventComponent = new TripPointView (offers, destinations, point, {
+      onTripEditClick: () => {
+        replacePointFormToEditForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const editEventComponent = new TripEditView (offers, destinations, point, {
+      onButtonSubmit: () => {
+        replaceEditFormToPointForm();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onCloseButtonClick: () => {
+        replaceEditFormToPointForm();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replacePointFormToEditForm () {
+      replace(editEventComponent, pointEventComponent);
+    }
+
+    function replaceEditFormToPointForm () {
+      replace(pointEventComponent, editEventComponent);
+    }
+    // (offers, destinations, point)
+    // const pointElement = new TripPointView (offers, destinations, point);
+    render(pointEventComponent, this.#eventListComponent.element);
   }
 }
