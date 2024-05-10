@@ -37,7 +37,7 @@ export default class TripSortView extends AbstractView {
 
   #sorters = null;
 
-  constructor(sorters) {
+  constructor({sorters}) {
     super();
     this.#sorters = sorters;
   }

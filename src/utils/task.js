@@ -42,7 +42,7 @@ const getDefaultEventPoint = () => ({
 });
 
 const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
-const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => a.basePrice - b.basePrice);
+const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
 const returnEmptyArray = () => [];
 const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(a.dateTo).diff(dayjs(a.dateFrom)) - dayjs(b.dateTo).diff(dayjs(b.dateFrom)));
 const filterTripByEverything = (tripPoints) => tripPoints;

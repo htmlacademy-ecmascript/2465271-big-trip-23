@@ -31,9 +31,9 @@ export default class MainPagePresenter {
     render(new TripListEmptyView({filter: this.#eventModel.filters[0]}), this.#boardContainer);
   }
 
-  #renderTripSortView({sortTypes}) {
-    const sorters = generateSorter(sortTypes);
-    render(new TripSortView(sorters), this.#boardContainer);
+  #renderTripSortView({points}) {
+    const sorters = generateSorter(points);
+    render(new TripSortView({sorters}), this.#boardContainer);
   }
 
   #renderPoints({points}) {
