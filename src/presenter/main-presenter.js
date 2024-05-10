@@ -2,9 +2,9 @@ import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
 import TripEditView from '../view/trip-edit-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
-// import TripCreateView from '../view/trip-create-view';
+import TripCreateView from '../view/trip-create-view';
 import TripPointView from '../view/trip-point-view';
-// import { getDefaultEventPoint } from '../utils/task';
+import { getDefaultEventPoint } from '../utils/task';
 import { render, replace } from '../framework/render';
 import { generateSorter } from '../mock/mock-sort';
 import { isEmpty } from '../utils/task';
@@ -12,21 +12,19 @@ import { isEmpty } from '../utils/task';
 export default class MainPagePresenter {
   #boardContainer = null;
   #eventModel = null;
-  // #eventSortComponent = null;
   #eventListComponent = null;
 
   constructor({boardContainer, eventModel}) {
     this.#boardContainer = boardContainer;
     this.#eventModel = eventModel;
-    // this.#eventSortComponent = new TripSortView();
     this.#eventListComponent = new TripListView();
   }
 
   init() {
+    render(new TripCreateView
+    (this.#eventModel.offers, this.#eventModel.destinations, getDefaultEventPoint())
+    , this.#eventListComponent.element);
     this.#renderPoints(this.#eventModel);
-    // render(new TripCreateView
-    // (this.#offers, this.#destinations, getDefaultEventPoint())
-    // , this.#eventListComponent.element);
   }
 
   #renderEmptyViewMessage () {
