@@ -1,5 +1,5 @@
-import { createElement } from '../render';
 import { FilterType } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 
 const PageMessageTextType = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
@@ -17,20 +17,8 @@ const createTripListEmptyTemplate = (filterType = FilterType.EVERYTHING) => {
     </p>`
   );
 };
-export default class TripListEmptyView {
-  getTemplate() {
+export default class TripListEmptyView extends AbstractView {
+  get template() {
     return createTripListEmptyTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

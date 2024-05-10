@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const TRIP_SORT_NAMES = ['day', 'event', 'time', 'price', 'offers'];
 
@@ -13,20 +13,8 @@ const createSortTemplate = () =>
   ${TRIP_SORT_NAMES.map((name) => createSortElement(name)).join('')}
   </form>`;
 
-export default class TripSortView {
-  getTemplate() {
+export default class TripSortView extends AbstractView {
+  get template() {
     return createSortTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

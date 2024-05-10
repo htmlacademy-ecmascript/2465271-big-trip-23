@@ -5,4 +5,11 @@ const FilterType = {
   FUTURE: 'future',
 };
 
-export {FilterType};
+const TimeType = {
+  MINUTES: 60,
+  HOURS: 24,
+};
+
+const eventTypes = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+export {FilterType, TimeType, eventTypes};
