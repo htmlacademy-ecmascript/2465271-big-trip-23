@@ -1,15 +1,8 @@
-import { FilterType } from '../const';
+import { EmptyMessageTextType } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-const PageMessageTextType = {
-  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
-  [FilterType.FUTURE]: 'There are no future events now',
-  [FilterType.PRESENT]: 'There are no present events now',
-  [FilterType.PAST]: 'There are no past events now',
-};
-
-const createTripListEmptyTemplate = (filterType = FilterType.EVERYTHING) => {
-  const currentPageMessageTextTipe = PageMessageTextType[filterType];
+const createTripListEmptyTemplate = (filterType) => {
+  const currentPageMessageTextTipe = EmptyMessageTextType[filterType];
 
   return (
     `<p class="trip-events__msg">
@@ -18,7 +11,14 @@ const createTripListEmptyTemplate = (filterType = FilterType.EVERYTHING) => {
   );
 };
 export default class TripListEmptyView extends AbstractView {
+  #filter = '';
+
+  constructor({filter}) {
+    super();
+    this.#filter = filter;
+  }
+
   get template() {
-    return createTripListEmptyTemplate();
+    return createTripListEmptyTemplate(this.#filter);
   }
 }

@@ -1,3 +1,7 @@
+const POINT_DATE_FORMAT = 'MMM D';
+const POINT_TIME_FORMAT = 'HH:mm';
+const EDIT_TIME_FORMAT = 'DD/MM/YY HH:mm';
+
 const FilterType = {
   EVERYTHING: 'everything',
   PAST: 'past',
@@ -5,11 +9,37 @@ const FilterType = {
   FUTURE: 'future',
 };
 
+const EmptyMessageTextType = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
+};
+
 const TimeType = {
   MINUTES: 60,
   HOURS: 24,
 };
 
-const eventTypes = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
 
-export {FilterType, TimeType, eventTypes};
+const SortTypes = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
+};
+
+export {
+  FilterType,
+  TimeType,
+  EVENT_TYPES,
+  EmptyMessageTextType,
+  POINT_DATE_FORMAT,
+  POINT_TIME_FORMAT,
+  EDIT_TIME_FORMAT,
+  SORT_TYPES,
+  SortTypes,
+};

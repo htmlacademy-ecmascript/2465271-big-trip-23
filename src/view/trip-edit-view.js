@@ -1,5 +1,5 @@
-import { getFirstWordCapitalize, displayEditTime } from '../utils';
-import { eventTypes } from '../const';
+import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
+import { EVENT_TYPES } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
 const createTripEditFormTemplate = (offers, destinations, point) => {
@@ -64,7 +64,7 @@ const createTripEditFormTemplate = (offers, destinations, point) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                  ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
+                  ${EVENT_TYPES.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
               </fieldset>
             </div>
           </div>
@@ -117,33 +117,33 @@ export default class TripEditView extends AbstractView {
   #offers = null;
   #destinations = null;
   #point = null;
-  #handleButtonSubmit = null;
-  #handleCloseButtonClick = null;
+  #handleSubmit = null;
+  #handleCancel = null;
 
-  constructor(offers, destinations, point, {onButtonSubmit, onCloseButtonClick}) {
+  constructor({offers, destinations, point, onFormSubmit, onCloseButtonClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
-    this.#handleButtonSubmit = onButtonSubmit;
-    this.#handleCloseButtonClick = onCloseButtonClick;
-    this.element.querySelector('.event--edit')
-      .addEventListener('submit', this.#buttonSubmitHandler);
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#buttonEditFormCloseHandler);
+    this.#handleSubmit = onFormSubmit;
+    this.#handleCancel = onCloseButtonClick;
+
+    this.element.addEventListener('submit', this.#onFormSubmit);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
+    this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormCancel);
   }
 
   get template() {
     return createTripEditFormTemplate(this.#offers, this.#destinations, this.#point);
   }
 
-  #buttonSubmitHandler = (evt) => {
+  #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this.#handleButtonSubmit();
+    this.#handleSubmit();
   };
 
-  #buttonEditFormCloseHandler = (evt) => {
+  #onFormCancel = (evt) => {
     evt.preventDefault();
-    this.#handleCloseButtonClick();
+    this.#handleCancel();
   };
 }

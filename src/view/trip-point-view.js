@@ -1,4 +1,4 @@
-import { displayEventTime, displayEventDate, getDuration } from '../utils';
+import { displayEventTime, displayEventDate, getDuration } from '../utils/task';
 import TripCreateView from './trip-create-view';
 
 const createTripPointTemplate = (offers, destinations, point) => {
@@ -58,12 +58,13 @@ export default class TripPointView extends TripCreateView {
   #point = null;
   #handleTripEditClick = null;
 
-  constructor(offers, destinations, point, {onTripEditClick}) {
+  constructor({offers, destinations, point, onTripEditClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
     this.#handleTripEditClick = onTripEditClick;
+
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
   }
