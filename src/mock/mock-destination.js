@@ -1,6 +1,6 @@
-import { getRandomDescriptionPhoto } from '../utils';
+import { getRandomDescriptionPhoto } from '../utils/task';
 
-export const destinations = [
+export const destinationsData = [
   {
     id: 1,
     description: '',

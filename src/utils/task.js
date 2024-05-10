@@ -1,16 +1,6 @@
 import dayjs from 'dayjs';
-import { TimeType, eventTypes } from './const';
-
-const POINT_DATE_FORMAT = 'MMM D';
-const POINT_TIME_FORMAT = 'HH:mm';
-const EDIT_TIME_FORMAT = 'DD/MM/YY HH:mm';
-
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
-
-const getRandomNumberElement = (min, max) => {
-  const rand = min + Math.random() * (max + 1 - min);
-  return Math.floor(rand);
-};
+import { TimeType, EVENT_TYPES, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
 
@@ -48,17 +38,34 @@ const getDefaultEventPoint = () => ({
   destination: 0,
   isFavorite: false,
   offers: [],
-  type: eventTypes[5],
+  type: EVENT_TYPES[5],
 });
 
+const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
+const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
+const returnEmptyArray = () => [];
+const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(a.dateTo).diff(dayjs(a.dateFrom)) - dayjs(b.dateTo).diff(dayjs(b.dateFrom)));
+const filterTripByEverything = (tripPoints) => tripPoints;
+const filterTripByPast = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateTo).getTime() < Date.now());
+const filterTripByPresent = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateFrom).getTime() <= Date.now() && new Date (trip.dateTo).getTime() >= Date.now());
+const filterTripByFuture = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateFrom).getTime() > Date.now());
+const isEmpty = (data) => data.length === 0;
+
 export {
-  getRandomArrayElement,
   getRandomDescriptionPhoto,
   displayEventTime,
   displayEventDate,
   displayEditTime,
   getFirstWordCapitalize,
   getDuration,
-  getRandomNumberElement,
   getDefaultEventPoint,
+  sortDefaultByDay,
+  sortByPrice,
+  sortByTime,
+  filterTripByEverything,
+  returnEmptyArray,
+  filterTripByPast,
+  filterTripByPresent,
+  filterTripByFuture,
+  isEmpty
 };

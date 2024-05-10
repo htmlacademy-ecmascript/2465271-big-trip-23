@@ -1,4 +1,4 @@
-export const points = [
+export const pointsData = [
   {
     basePrice: 1150,
     dateFrom: '2024-06-10T22:55:56.845Z',
@@ -31,7 +31,7 @@ export const points = [
   },
   {
     basePrice: 840,
-    dateFrom: '2024-08-10T10:55:56.845Z',
+    dateFrom: '2024-07-10T10:55:56.845Z',
     dateTo: '2024-08-10T16:19:56.845Z',
     destination: 3,
     id: 4,

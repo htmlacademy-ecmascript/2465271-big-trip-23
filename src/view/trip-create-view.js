@@ -1,5 +1,5 @@
-import { getFirstWordCapitalize, displayEditTime } from '../utils';
-import { eventTypes } from '../const';
+import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
+import { EVENT_TYPES } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
 const createTripFormTemplate = (offers, destinations, point) => {
@@ -64,7 +64,7 @@ const createTripFormTemplate = (offers, destinations, point) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
+                ${EVENT_TYPES.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
               </fieldset>
             </div>
           </div>
