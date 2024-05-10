@@ -4,7 +4,6 @@ import TripEditView from '../view/trip-edit-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import TripCreateView from '../view/trip-create-view';
 import TripPointView from '../view/trip-point-view';
-import { getDefaultEventPoint } from '../utils/task';
 import { render, replace } from '../framework/render';
 import { generateSorter } from '../mock/mock-sort';
 import { isEmpty } from '../utils/task';
@@ -21,9 +20,7 @@ export default class MainPagePresenter {
   }
 
   init() {
-    render(new TripCreateView
-    (this.#eventModel.offers, this.#eventModel.destinations, getDefaultEventPoint())
-    , this.#eventListComponent.element);
+    this.#renderTripCreateView();
     this.#renderPoints(this.#eventModel);
   }
 
@@ -34,6 +31,18 @@ export default class MainPagePresenter {
   #renderTripSortView({points}) {
     const sorters = generateSorter(points);
     render(new TripSortView({sorters}), this.#boardContainer);
+  }
+
+  #renderTripCreateView() {
+    const offers = this.#eventModel.offers;
+    const destinations = this.#eventModel.destinations;
+    const point = this.#eventModel.defaultPoint;
+    const pointCreateComponent = new TripCreateView (
+      offers,
+      destinations,
+      point,
+    );
+    render(pointCreateComponent, this.#eventListComponent.element);
   }
 
   #renderPoints({points}) {

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { TimeType, EVENT_TYPES, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { TimeType, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
 import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
@@ -31,16 +31,6 @@ const getDuration = (dateFrom, dateTo) => {
   return resultDuration.join('');
 };
 
-const getDefaultEventPoint = () => ({
-  basePrice: 0,
-  dateFrom: '',
-  dateTo: '',
-  destination: 0,
-  isFavorite: false,
-  offers: [],
-  type: EVENT_TYPES[5],
-});
-
 const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
 const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
 const returnEmptyArray = () => [];
@@ -58,7 +48,6 @@ export {
   displayEditTime,
   getFirstWordCapitalize,
   getDuration,
-  getDefaultEventPoint,
   sortDefaultByDay,
   sortByPrice,
   sortByTime,
