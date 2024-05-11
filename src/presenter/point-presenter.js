@@ -1,6 +1,6 @@
 import TripEditView from '../view/trip-edit-view';
 import TripPointView from '../view/trip-point-view';
-import { render, replace } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 
 export default class PointPresenter {
   #pointContainer = null;
@@ -20,12 +20,17 @@ export default class PointPresenter {
     this.#destinations = destinations;
     this.#point = point;
     this.#eventTypes = eventTypes;
+
+    const prevPointEventComponent = this.#pointEventComponent;
+    const prevEditEventComponent = this.#editEventComponent;
+
     this.#pointEventComponent = new TripPointView({
       offers: this.#offers,
       destinations: this.#destinations,
       point: this.#point,
       onTripEditClick: this.#handleTripEditClick,
     });
+
     this.#editEventComponent = new TripEditView ({
       offers: this.#offers,
       destinations: this.#destinations,
@@ -34,7 +39,20 @@ export default class PointPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onCloseButtonClick: this.#handleCloseButtonClick,
     });
-    render(this.#pointEventComponent, this.#pointContainer);
+
+    if (prevPointEventComponent === null || prevEditEventComponent === null) {
+      render(this.#pointEventComponent, this.#pointContainer);
+      return;
+    }
+    if (this.#pointContainer.contains(prevPointEventComponent.element)) {
+      replace(this.#pointEventComponent, prevPointEventComponent);
+    }
+    if (this.#pointContainer.contains(prevEditEventComponent.element)) {
+      replace(this.#pointEventComponent, prevEditEventComponent);
+    }
+
+    remove(prevPointEventComponent);
+    remove(prevEditEventComponent);
   }
 
   #replacePointFormToEditForm() {
