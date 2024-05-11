@@ -11,6 +11,7 @@ export default class MainPagePresenter {
   #boardContainer = null;
   #eventModel = null;
   #eventListComponent = null;
+  #pointPresenters = new Map();
 
   constructor({boardContainer, eventModel}) {
     this.#boardContainer = boardContainer;
@@ -65,5 +66,11 @@ export default class MainPagePresenter {
       pointContainer: this.#eventListComponent.element,
     });
     pointPresenter.init(offers, destinations, point, eventTypes);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #clearPointList () {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   }
 }
