@@ -1,8 +1,7 @@
 import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
-import { EVENT_TYPES } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-const createTripEditFormTemplate = (offers, destinations, point) => {
+const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => {
   const {basePrice, dateFrom, dateTo, type} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const selectedOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
@@ -64,7 +63,7 @@ const createTripEditFormTemplate = (offers, destinations, point) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                  ${EVENT_TYPES.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
+                  ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
               </fieldset>
             </div>
           </div>
@@ -117,14 +116,16 @@ export default class TripEditView extends AbstractView {
   #offers = null;
   #destinations = null;
   #point = null;
+  #eventTypes = null;
   #handleSubmit = null;
   #handleCancel = null;
 
-  constructor({offers, destinations, point, onFormSubmit, onCloseButtonClick}) {
+  constructor({offers, destinations, point, eventTypes, onFormSubmit, onCloseButtonClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
+    this.#eventTypes = eventTypes;
     this.#handleSubmit = onFormSubmit;
     this.#handleCancel = onCloseButtonClick;
 
@@ -134,7 +135,7 @@ export default class TripEditView extends AbstractView {
   }
 
   get template() {
-    return createTripEditFormTemplate(this.#offers, this.#destinations, this.#point);
+    return createTripEditFormTemplate(this.#offers, this.#destinations, this.#point, this.#eventTypes);
   }
 
   #onFormSubmit = (evt) => {

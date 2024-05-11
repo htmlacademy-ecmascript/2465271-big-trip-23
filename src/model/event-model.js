@@ -1,7 +1,7 @@
 import { offersData } from '../mock/mock-offers';
 import { destinationsData } from '../mock/mock-destination';
 import { pointsData } from '../mock/mock-points';
-import { FilterType, SORT_TYPES, defaultEventPoint } from '../const';
+import { FilterType, SORT_TYPES, defaultEventPoint, EVENT_TYPES } from '../const';
 
 export default class EventModel {
 
@@ -11,6 +11,7 @@ export default class EventModel {
   #filters = [];
   #sortTypes = [];
   #defaultPoint = [];
+  #eventTypes = [];
 
   init() {
     this.#offers = offersData;
@@ -19,6 +20,7 @@ export default class EventModel {
     this.#filters = Object.values(FilterType);
     this.#sortTypes = SORT_TYPES;
     this.#defaultPoint = defaultEventPoint;
+    this.#eventTypes = EVENT_TYPES;
   }
 
   get offers() {
@@ -67,5 +69,13 @@ export default class EventModel {
 
   set defaultPoint(defaultPoint) {
     this.#defaultPoint = defaultPoint;
+  }
+
+  get eventTypes() {
+    return this.#eventTypes;
+  }
+
+  set eventTypes(eventTypes) {
+    this.#eventTypes = eventTypes;
   }
 }
