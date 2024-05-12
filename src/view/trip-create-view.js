@@ -113,11 +113,11 @@ export default class TripCreateView extends AbstractView {
   #point = null;
   #eventTypes = null;
 
-  constructor(offers, destinations, point, eventTypes) {
+  constructor(offers, destinations, points, eventTypes) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#point = point;
+    this.#point = points;
     this.#eventTypes = eventTypes;
   }
 

@@ -5,7 +5,10 @@ const getRandomNumberElement = (min, max) => {
   return Math.floor(rand);
 };
 
+const updatePoint = (points, update) => points.map((point) => point.id === update.id ? update : point);
+
 export {
   getRandomArrayElement,
-  getRandomNumberElement
+  getRandomNumberElement,
+  updatePoint,
 };

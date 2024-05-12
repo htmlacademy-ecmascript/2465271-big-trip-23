@@ -6,16 +6,19 @@ import PointPresenter from './point-presenter';
 import { render } from '../framework/render';
 import { generateSorter } from '../mock/mock-sort';
 import { isEmpty } from '../utils/task';
+import { updatePoint } from '../utils/common';
 
 export default class MainPagePresenter {
   #boardContainer = null;
   #eventModel = null;
   #eventListComponent = null;
+  #points = [];
   #pointPresenters = new Map();
 
   constructor({boardContainer, eventModel}) {
     this.#boardContainer = boardContainer;
     this.#eventModel = eventModel;
+    this.#points = eventModel.points;
     this.#eventListComponent = new TripListView();
   }
 
@@ -23,6 +26,16 @@ export default class MainPagePresenter {
     this.#renderTripCreateView();
     this.#renderPoints(this.#eventModel);
   }
+
+  #handleTaskChange = (updatedPoint) => {
+    this.#points = updatePoint(this.#points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(
+      this.#eventModel.offers,
+      this.#eventModel.destinations,
+      updatedPoint,
+      this.#eventModel.eventTypes,
+    );
+  };
 
   #renderEmptyViewMessage () {
     render(new TripListEmptyView({filter: this.#eventModel.filters[0]}), this.#boardContainer);
@@ -34,15 +47,11 @@ export default class MainPagePresenter {
   }
 
   #renderTripCreateView() {
-    const offers = this.#eventModel.offers;
-    const destinations = this.#eventModel.destinations;
-    const point = this.#eventModel.defaultPoint;
-    const eventTypes = this.#eventModel.eventTypes;
     const pointCreateComponent = new TripCreateView (
-      offers,
-      destinations,
-      point,
-      eventTypes,
+      this.#eventModel.offers,
+      this.#eventModel.destinations,
+      this.#eventModel.defaultPoint,
+      this.#eventModel.eventTypes,
     );
     render(pointCreateComponent, this.#eventListComponent.element);
   }
@@ -59,13 +68,16 @@ export default class MainPagePresenter {
   }
 
   #renderPoint (point) {
-    const offers = this.#eventModel.offers;
-    const destinations = this.#eventModel.destinations;
-    const eventTypes = this.#eventModel.eventTypes;
     const pointPresenter = new PointPresenter({
       pointContainer: this.#eventListComponent.element,
+      onDataChange: this.#handleTaskChange,
     });
-    pointPresenter.init(offers, destinations, point, eventTypes);
+    pointPresenter.init(
+      this.#eventModel.offers,
+      this.#eventModel.destinations,
+      point,
+      this.#eventModel.eventTypes,
+    );
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 

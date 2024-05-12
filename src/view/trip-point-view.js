@@ -57,16 +57,21 @@ export default class TripPointView extends TripCreateView {
   #destinations = null;
   #point = null;
   #handleTripEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({offers, destinations, point, onTripEditClick}) {
+  constructor({offers, destinations, point, onTripEditClick, onFavoriteClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
     this.#handleTripEditClick = onTripEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
+
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -76,5 +81,10 @@ export default class TripPointView extends TripCreateView {
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleTripEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }
