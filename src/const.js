@@ -42,6 +42,11 @@ const defaultEventPoint = {
   type: EVENT_TYPES[5],
 };
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export {
   FilterType,
   TimeType,
@@ -53,4 +58,5 @@ export {
   SORT_TYPES,
   SortTypes,
   defaultEventPoint,
+  Mode,
 };

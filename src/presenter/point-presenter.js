@@ -1,20 +1,26 @@
 import TripEditView from '../view/trip-edit-view';
 import TripPointView from '../view/trip-point-view';
 import { render, replace, remove } from '../framework/render';
+import { Mode } from '../const';
 
 export default class PointPresenter {
   #pointContainer = null;
   #pointEventComponent = null;
   #editEventComponent = null;
+
   #offers = null;
   #destinations = null;
-  #point = [];
+  #point = null;
   #eventTypes = null;
-  #handleDataChange = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({pointContainer, onDataChange}) {
+  #handleDataChange = null;
+  #handleModeChange = null;
+
+  constructor({pointContainer, onDataChange, onModeChange}) {
     this.#pointContainer = pointContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(offers, destinations, point, eventTypes) {
@@ -47,10 +53,10 @@ export default class PointPresenter {
       render(this.#pointEventComponent, this.#pointContainer);
       return;
     }
-    if (this.#pointContainer.contains(prevPointEventComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointEventComponent, prevPointEventComponent);
     }
-    if (this.#pointContainer.contains(prevEditEventComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#editEventComponent, prevEditEventComponent);
     }
 
@@ -63,14 +69,23 @@ export default class PointPresenter {
     remove(this.#editEventComponent);
   }
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceEditFormToPointForm();
+    }
+  }
+
   #replacePointFormToEditForm() {
     replace(this.#editEventComponent, this.#pointEventComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceEditFormToPointForm () {
     replace(this.#pointEventComponent, this.#editEventComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {
