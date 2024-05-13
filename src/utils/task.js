@@ -10,7 +10,7 @@ const displayEventDate = (date) => date ? dayjs(date).format(POINT_DATE_FORMAT) 
 
 const displayEditTime = (dateTime) => dateTime ? dayjs(dateTime).format(EDIT_TIME_FORMAT) : '';
 
-const getFirstWordCapitalize = (word) => word.split(' ').map((elem) => `${elem[0].toUpperCase()}${elem.slice(1).toLowerCase()}`).join(' ');
+const getFirstWordCapitalize = (word) => word.split(' ').map((elem) => `${elem[0].toUpperCase()}${elem.slice(1).toLowerCase()}`).join('');
 
 const getDuration = (dateFrom, dateTo) => {
   const timeDurations = [
