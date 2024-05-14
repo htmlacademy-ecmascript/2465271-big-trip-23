@@ -1,8 +1,7 @@
 import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
-import { EVENT_TYPES } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-const createTripFormTemplate = (offers, destinations, point) => {
+const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
   const {basePrice, dateFrom, dateTo, type} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const selectedOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
@@ -64,7 +63,7 @@ const createTripFormTemplate = (offers, destinations, point) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${EVENT_TYPES.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
+                ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
               </fieldset>
             </div>
           </div>
@@ -112,15 +111,17 @@ export default class TripCreateView extends AbstractView {
   #offers = null;
   #destinations = null;
   #point = null;
+  #eventTypes = null;
 
-  constructor(offers, destinations, point) {
+  constructor(offers, destinations, points, eventTypes) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#point = point;
+    this.#point = points;
+    this.#eventTypes = eventTypes;
   }
 
   get template() {
-    return createTripFormTemplate(this.#offers, this.#destinations, this.#point);
+    return createTripFormTemplate(this.#offers, this.#destinations, this.#point,this.#eventTypes);
   }
 }

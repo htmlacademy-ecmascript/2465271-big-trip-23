@@ -15,8 +15,7 @@ const createFilterElement = (filter, isChecked) => {
        />
       <label
       class="trip-filters__filter-label"
-      for="filter-${type}">${getFirstWordCapitalize(type)}
-      </label>
+      for="filter-${type}">${getFirstWordCapitalize(type)}</label>
   </div>`
   );
 };

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { TimeType, EVENT_TYPES, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { TimeType, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
 import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
@@ -10,7 +10,7 @@ const displayEventDate = (date) => date ? dayjs(date).format(POINT_DATE_FORMAT) 
 
 const displayEditTime = (dateTime) => dateTime ? dayjs(dateTime).format(EDIT_TIME_FORMAT) : '';
 
-const getFirstWordCapitalize = (word) => word.split(' ').map((elem) => `${elem[0].toUpperCase()}${elem.slice(1).toLowerCase()}`).join(' ');
+const getFirstWordCapitalize = (word) => word.split(' ').map((elem) => `${elem[0].toUpperCase()}${elem.slice(1).toLowerCase()}`).join('');
 
 const getDuration = (dateFrom, dateTo) => {
   const timeDurations = [
@@ -31,20 +31,9 @@ const getDuration = (dateFrom, dateTo) => {
   return resultDuration.join('');
 };
 
-const getDefaultEventPoint = () => ({
-  basePrice: 0,
-  dateFrom: '',
-  dateTo: '',
-  destination: 0,
-  isFavorite: false,
-  offers: [],
-  type: EVENT_TYPES[5],
-});
-
 const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
 const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
-const returnEmptyArray = () => [];
-const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(a.dateTo).diff(dayjs(a.dateFrom)) - dayjs(b.dateTo).diff(dayjs(b.dateFrom)));
+const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(b.dateTo).diff(dayjs(b.dateFrom)) - dayjs(a.dateTo).diff(dayjs(a.dateFrom)));
 const filterTripByEverything = (tripPoints) => tripPoints;
 const filterTripByPast = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateTo).getTime() < Date.now());
 const filterTripByPresent = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateFrom).getTime() <= Date.now() && new Date (trip.dateTo).getTime() >= Date.now());
@@ -58,12 +47,10 @@ export {
   displayEditTime,
   getFirstWordCapitalize,
   getDuration,
-  getDefaultEventPoint,
   sortDefaultByDay,
   sortByPrice,
   sortByTime,
   filterTripByEverything,
-  returnEmptyArray,
   filterTripByPast,
   filterTripByPresent,
   filterTripByFuture,

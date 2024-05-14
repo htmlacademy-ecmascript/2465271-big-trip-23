@@ -32,6 +32,21 @@ const SortTypes = {
   OFFERS: 'offers',
 };
 
+const defaultEventPoint = {
+  basePrice: 0,
+  dateFrom: '',
+  dateTo: '',
+  destination: 0,
+  isFavorite: false,
+  offers: [],
+  type: EVENT_TYPES[5],
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export {
   FilterType,
   TimeType,
@@ -42,4 +57,6 @@ export {
   EDIT_TIME_FORMAT,
   SORT_TYPES,
   SortTypes,
+  defaultEventPoint,
+  Mode,
 };

@@ -1,7 +1,8 @@
 import TripFilterView from '../view/trip-filter-view';
 import TripInfoView from '../view/trip-info-view';
 import { render, RenderPosition } from '../framework/render';
-import { generateFilter } from '../mock/mock-filter';
+import { generateSorterAndFilter } from '../mock/mock-sort-filter';
+import { filter } from '../utils/filter';
 
 export default class HeaderPagePresenter {
   #eventModel = null;
@@ -18,7 +19,7 @@ export default class HeaderPagePresenter {
   }
 
   #renderTripFilterView ({points}) {
-    const filters = generateFilter(points);
+    const filters = generateSorterAndFilter(filter, points);
     render(new TripFilterView({filters}) , this.boardContainer);
   }
 }

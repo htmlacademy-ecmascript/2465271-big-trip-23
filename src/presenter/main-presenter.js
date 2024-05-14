@@ -1,93 +1,126 @@
 import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
-import TripEditView from '../view/trip-edit-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import TripCreateView from '../view/trip-create-view';
-import TripPointView from '../view/trip-point-view';
-import { getDefaultEventPoint } from '../utils/task';
-import { render, replace } from '../framework/render';
-import { generateSorter } from '../mock/mock-sort';
-import { isEmpty } from '../utils/task';
+import PointPresenter from './point-presenter';
+import { render } from '../framework/render';
+import { generateSorterAndFilter } from '../mock/mock-sort-filter';
+import { isEmpty, sortByPrice, sortByTime } from '../utils/task';
+import { sorter } from '../utils/sort';
+import { updatePoint } from '../utils/common';
 
 export default class MainPagePresenter {
   #boardContainer = null;
   #eventModel = null;
   #eventListComponent = null;
+  #points = [];
+  #sortComponent = null;
+  #pointPresenters = new Map();
+  #currentSortType = '';
+  #sourcedEventPoints = [];
 
   constructor({boardContainer, eventModel}) {
     this.#boardContainer = boardContainer;
     this.#eventModel = eventModel;
+    this.#points = eventModel.points;
+    this.#currentSortType = eventModel.sortTypes.DAY;
     this.#eventListComponent = new TripListView();
   }
 
   init() {
-    render(new TripCreateView
-    (this.#eventModel.offers, this.#eventModel.destinations, getDefaultEventPoint())
-    , this.#eventListComponent.element);
-    this.#renderPoints(this.#eventModel);
+    this.#renderTripCreateView();
+    this.#sourcedEventPoints = [...this.#points];
+    this.#renderPoints(this.#points);
   }
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleTaskChange = (updatedPoint) => {
+    this.#points = updatePoint(this.#points, updatedPoint);
+    this.#sourcedEventPoints = updatePoint(this.#sourcedEventPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(
+      this.#eventModel.offers,
+      this.#eventModel.destinations,
+      updatedPoint,
+      this.#eventModel.eventTypes,
+    );
+  };
+
+  #sortPoints (sortPoint) {
+    switch (sortPoint) {
+      case this.#eventModel.sortTypes.TIME:
+        this.#points = sortByTime(this.#points);
+        break;
+      case this.#eventModel.sortTypes.PRICE:
+        this.#points = sortByPrice(this.#points);
+        break;
+      default:
+        this.#points = [...this.#sourcedEventPoints];
+    }
+    this.#currentSortType = sortPoint;
+  }
+
+  #handleSoptTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderPoints(this.#points);
+  };
 
   #renderEmptyViewMessage () {
     render(new TripListEmptyView({filter: this.#eventModel.filters[0]}), this.#boardContainer);
   }
 
-  #renderTripSortView({points}) {
-    const sorters = generateSorter(points);
-    render(new TripSortView({sorters}), this.#boardContainer);
+  #renderTripSortView(points) {
+    const sorters = generateSorterAndFilter(sorter, points);
+    this.#sortComponent = new TripSortView({
+      sorters,
+      onSortTypeChange: this.#handleSoptTypeChange
+    });
+    render(this.#sortComponent, this.#boardContainer);
   }
 
-  #renderPoints({points}) {
+  #renderTripCreateView() {
+    const pointCreateComponent = new TripCreateView (
+      this.#eventModel.offers,
+      this.#eventModel.destinations,
+      this.#eventModel.defaultPoint,
+      this.#eventModel.eventTypes,
+    );
+    render(pointCreateComponent, this.#eventListComponent.element);
+    this.#renderTripSortView(this.#points);
+  }
+
+  #renderPoints(points) {
     if (isEmpty(points)) {
       this.#renderEmptyViewMessage();
       return;
     }
-
-    this.#renderTripSortView(this.#eventModel);
     render(this.#eventListComponent, this.#boardContainer);
     points.forEach((point) => this.#renderPoint(point));
   }
 
   #renderPoint (point) {
-    const offers = this.#eventModel.offers;
-    const destinations = this.#eventModel.destinations;
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditFormToPointForm();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const onTripEditClick = () => replacePointFormToEditForm();
-    const onFormSubmit = () => replaceEditFormToPointForm();
-    const onCloseButtonClick = () => replaceEditFormToPointForm();
-
-    const pointEventComponent = new TripPointView ({
-      offers,
-      destinations,
-      point,
-      onTripEditClick: onTripEditClick,
+    const pointPresenter = new PointPresenter({
+      pointContainer: this.#eventListComponent.element,
+      onDataChange: this.#handleTaskChange,
+      onModeChange: this.#handleModeChange,
     });
-
-    const editEventComponent = new TripEditView ({
-      offers,
-      destinations,
+    pointPresenter.init(
+      this.#eventModel.offers,
+      this.#eventModel.destinations,
       point,
-      onFormSubmit: onFormSubmit,
-      onCloseButtonClick: onCloseButtonClick,
-    });
+      this.#eventModel.eventTypes,
+    );
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
 
-    function replacePointFormToEditForm () {
-      replace(editEventComponent, pointEventComponent);
-      document.addEventListener('keydown', escKeyDownHandler);
-    }
-
-    function replaceEditFormToPointForm () {
-      replace(pointEventComponent, editEventComponent);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    render(pointEventComponent, this.#eventListComponent.element);
+  #clearPointList () {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   }
 }
