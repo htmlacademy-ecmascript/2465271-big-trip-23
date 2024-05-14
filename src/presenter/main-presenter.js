@@ -4,7 +4,7 @@ import TripListEmptyView from '../view/trip-list-empty-view';
 import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render } from '../framework/render';
-import { generateSorterAndFilter } from '../mock/mock-sort-filter';
+import { generateSorterAndFilter } from '../utils/grader';
 import { isEmpty, sortByPrice, sortByTime } from '../utils/task';
 import { sorter } from '../utils/sort';
 import { updatePoint } from '../utils/common';
@@ -37,7 +37,7 @@ export default class MainPagePresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleTaskChange = (updatedPoint) => {
+  #handleEventPointChange = (updatedPoint) => {
     this.#points = updatePoint(this.#points, updatedPoint);
     this.#sourcedEventPoints = updatePoint(this.#sourcedEventPoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(
@@ -107,7 +107,7 @@ export default class MainPagePresenter {
   #renderPoint (point) {
     const pointPresenter = new PointPresenter({
       pointContainer: this.#eventListComponent.element,
-      onDataChange: this.#handleTaskChange,
+      onDataChange: this.#handleEventPointChange,
       onModeChange: this.#handleModeChange,
     });
     pointPresenter.init(
