@@ -1,7 +1,7 @@
 import TripFilterView from '../view/trip-filter-view';
 import TripInfoView from '../view/trip-info-view';
 import { render, RenderPosition } from '../framework/render';
-import { generateSorterAndFilter } from '../mock/mock-sort-filter';
+import { generateSorterAndFilter } from '../utils/grader';
 import { filter } from '../utils/filter';
 
 export default class HeaderPagePresenter {
