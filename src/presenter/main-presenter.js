@@ -4,10 +4,10 @@ import TripListEmptyView from '../view/trip-list-empty-view';
 import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render } from '../framework/render';
-import { generateSorter } from '../mock/mock-sort';
+import { generateSorterAndFilter } from '../mock/mock-sort-filter';
 import { isEmpty, sortByPrice, sortByTime } from '../utils/task';
+import { sorter } from '../utils/sort';
 import { updatePoint } from '../utils/common';
-
 
 export default class MainPagePresenter {
   #boardContainer = null;
@@ -18,7 +18,6 @@ export default class MainPagePresenter {
   #pointPresenters = new Map();
   #currentSortType = '';
   #sourcedEventPoints = [];
-
 
   constructor({boardContainer, eventModel}) {
     this.#boardContainer = boardContainer;
@@ -77,7 +76,7 @@ export default class MainPagePresenter {
   }
 
   #renderTripSortView(points) {
-    const sorters = generateSorter(points);
+    const sorters = generateSorterAndFilter(sorter, points);
     this.#sortComponent = new TripSortView({
       sorters,
       onSortTypeChange: this.#handleSoptTypeChange

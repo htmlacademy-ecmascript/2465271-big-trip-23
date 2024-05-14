@@ -33,8 +33,7 @@ const getDuration = (dateFrom, dateTo) => {
 
 const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
 const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
-const returnEmptyArray = () => [];
-const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(a.dateTo).diff(dayjs(a.dateFrom)) - dayjs(b.dateTo).diff(dayjs(b.dateFrom)));
+const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(b.dateTo).diff(dayjs(b.dateFrom)) - dayjs(a.dateTo).diff(dayjs(a.dateFrom)));
 const filterTripByEverything = (tripPoints) => tripPoints;
 const filterTripByPast = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateTo).getTime() < Date.now());
 const filterTripByPresent = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateFrom).getTime() <= Date.now() && new Date (trip.dateTo).getTime() >= Date.now());
@@ -52,7 +51,6 @@ export {
   sortByPrice,
   sortByTime,
   filterTripByEverything,
-  returnEmptyArray,
   filterTripByPast,
   filterTripByPresent,
   filterTripByFuture,
