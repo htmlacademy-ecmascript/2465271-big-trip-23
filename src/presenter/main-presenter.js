@@ -1,7 +1,7 @@
 import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
-import TripCreateView from '../view/trip-create-view';
+// import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render } from '../framework/render';
 import { generateSorterAndFilter } from '../utils/grader';
@@ -29,7 +29,7 @@ export default class MainPagePresenter {
 
   init() {
     this.#renderTripSortView(this.#points);
-    this.#renderTripCreateView();
+    // this.#renderTripCreateView();
     this.#sourcedEventPoints = [...this.#points];
     this.#renderPoints(this.#points);
   }
@@ -85,15 +85,15 @@ export default class MainPagePresenter {
     render(this.#sortComponent, this.#boardContainer);
   }
 
-  #renderTripCreateView() {
-    const pointCreateComponent = new TripCreateView (
-      this.#eventModel.offers,
-      this.#eventModel.destinations,
-      this.#eventModel.defaultPoint,
-      this.#eventModel.eventTypes,
-    );
-    render(pointCreateComponent, this.#eventListComponent.element);
-  }
+  // #renderTripCreateView() {
+  //   const pointCreateComponent = new TripCreateView (
+  //     this.#eventModel.offers,
+  //     this.#eventModel.destinations,
+  //     this.#eventModel.defaultPoint,
+  //     this.#eventModel.eventTypes,
+  //   );
+  //   render(pointCreateComponent, this.#eventListComponent.element);
+  // }
 
   #renderPoints(points) {
     if (isEmpty(points)) {

@@ -203,7 +203,7 @@ export default class TripEditView extends AbstractStatefulView {
           enableTime: true,
           dateFormat: 'd/m/y H:i',
           defaulDate: this._state.dateFrom,
-          onChange: this.#dateFromChangeHandler,
+          onClose: this.#dateFromChangeHandler,
         },
       );
     }
@@ -217,7 +217,7 @@ export default class TripEditView extends AbstractStatefulView {
           enableTime: true,
           dateFormat: 'd/m/y H:i',
           defaulDate: this._state.dateTo,
-          onChange: this.#dateToChangeHandler,
+          onClose: this.#dateToChangeHandler,
         },
       );
     }
