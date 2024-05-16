@@ -141,6 +141,12 @@ export default class TripEditView extends AbstractStatefulView {
     return createTripEditFormTemplate(this.#offers, this.#destinations, this._state, this.#eventTypes);
   }
 
+  reset(point) {
+    this.updateElement(
+      TripEditView.parseTripEventToState(point),
+    );
+  }
+
   removeElement() {
     super.removeElement();
 
@@ -159,8 +165,8 @@ export default class TripEditView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormCancel);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventDestinationHandler);
-    // this.#setDateFromPicker();
-    // this.#setDateToPicker();
+    this.#setDateFromPicker();
+    this.#setDateToPicker();
   }
 
   #changeEventTypeHandler = (evt) => {
@@ -192,9 +198,10 @@ export default class TripEditView extends AbstractStatefulView {
   #setDateFromPicker() {
     if(this._state.dateFrom) {
       this.#dateFromPicker = flatpickr(
-        this.element.querySelector('input [name="event-start-time"]'),
+        this.element.querySelector('[name="event-start-time"]'),
         {
-          dateFormat: 'd.m.y H:i',
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
           defaulDate: this._state.dateFrom,
           onChange: this.#dateFromChangeHandler,
         },
@@ -205,9 +212,10 @@ export default class TripEditView extends AbstractStatefulView {
   #setDateToPicker() {
     if(this._state.dateTo) {
       this.#dateToPicker = flatpickr(
-        this.element.querySelector('input [name="event-end-time"]'),
+        this.element.querySelector('[name="event-end-time"]'),
         {
-          dateFormat: 'd.m.y H:i',
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
           defaulDate: this._state.dateTo,
           onChange: this.#dateToChangeHandler,
         },
