@@ -28,6 +28,7 @@ export default class MainPagePresenter {
   }
 
   init() {
+    this.#renderTripSortView(this.#points);
     this.#renderTripCreateView();
     this.#sourcedEventPoints = [...this.#points];
     this.#renderPoints(this.#points);
@@ -92,7 +93,6 @@ export default class MainPagePresenter {
       this.#eventModel.eventTypes,
     );
     render(pointCreateComponent, this.#eventListComponent.element);
-    this.#renderTripSortView(this.#points);
   }
 
   #renderPoints(points) {
@@ -101,7 +101,7 @@ export default class MainPagePresenter {
       return;
     }
     render(this.#eventListComponent, this.#boardContainer);
-    points.forEach((point) => this.#renderPoint(point));
+    this.#points.forEach((point) => this.#renderPoint(point));
   }
 
   #renderPoint (point) {

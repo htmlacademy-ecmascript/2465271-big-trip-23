@@ -1,5 +1,7 @@
 import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
-import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => {
   const {basePrice, dateFrom, dateTo, type} = point;
@@ -63,7 +65,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                  ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
+                  ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem), '')).join('')}
               </fieldset>
             </div>
           </div>
@@ -111,7 +113,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
   );
 };
 
-export default class TripEditView extends AbstractView {
+export default class TripEditView extends AbstractStatefulView {
 
   #offers = null;
   #destinations = null;
@@ -119,9 +121,12 @@ export default class TripEditView extends AbstractView {
   #eventTypes = null;
   #handleSubmit = null;
   #handleCancel = null;
+  #dateFromPicker = null;
+  #dateToPicker = null;
 
   constructor({offers, destinations, point, eventTypes, onFormSubmit, onCloseButtonClick}) {
     super();
+    this._setState(TripEditView.parseTripEventToState(point));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
@@ -129,18 +134,99 @@ export default class TripEditView extends AbstractView {
     this.#handleSubmit = onFormSubmit;
     this.#handleCancel = onCloseButtonClick;
 
-    this.element.addEventListener('submit', this.#onFormSubmit);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
-    this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormCancel);
+    this._restoreHandlers();
   }
 
   get template() {
-    return createTripEditFormTemplate(this.#offers, this.#destinations, this.#point, this.#eventTypes);
+    return createTripEditFormTemplate(this.#offers, this.#destinations, this._state, this.#eventTypes);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if(this.#dateFromPicker) {
+      this.#dateFromPicker.destroy();
+      this.#dateFromPicker = null;
+    } if(this.#dateToPicker) {
+      this.#dateToPicker.destroy();
+      this.#dateToPicker = null;
+    }
+  }
+
+  _restoreHandlers() {
+    this.element.addEventListener('submit', this.#onFormSubmit);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
+    this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormCancel);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventDestinationHandler);
+    // this.#setDateFromPicker();
+    // this.#setDateToPicker();
+  }
+
+  #changeEventTypeHandler = (evt) => {
+    this.updateElement({
+      type: evt.target.value,
+      offers: [],
+    });
+  };
+
+  #changeEventDestinationHandler = (evt) => {
+    const currentDestination = this.#destinations.find((elem) => elem.name === evt.target.value);
+    this.updateElement({
+      destination: currentDestination.id
+    });
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDateFromPicker() {
+    if(this._state.dateFrom) {
+      this.#dateFromPicker = flatpickr(
+        this.element.querySelector('input [name="event-start-time"]'),
+        {
+          dateFormat: 'd.m.y H:i',
+          defaulDate: this._state.dateFrom,
+          onChange: this.#dateFromChangeHandler,
+        },
+      );
+    }
+  }
+
+  #setDateToPicker() {
+    if(this._state.dateTo) {
+      this.#dateToPicker = flatpickr(
+        this.element.querySelector('input [name="event-end-time"]'),
+        {
+          dateFormat: 'd.m.y H:i',
+          defaulDate: this._state.dateTo,
+          onChange: this.#dateToChangeHandler,
+        },
+      );
+    }
+  }
+
+  static parseTripEventToState(point) {
+    return {...point};
+  }
+
+  static parseStatetoTripEvent(state) {
+    const point = {...state};
+    return point;
   }
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this.#handleSubmit(this.#point);
+    this.#handleSubmit(TripEditView.parseStatetoTripEvent(this._state));
   };
 
   #onFormCancel = (evt) => {
