@@ -1,5 +1,5 @@
 import { displayEventTime, displayEventDate, getDuration } from '../utils/task';
-import TripCreateView from './trip-create-view';
+import AbstractView from '../framework/view/abstract-view';
 
 const createTripPointTemplate = (offers, destinations, point) => {
   const {dateFrom, dateTo, isFavorite, basePrice, type} = point;
@@ -51,7 +51,7 @@ const createTripPointTemplate = (offers, destinations, point) => {
   </li>`);
 };
 
-export default class TripPointView extends TripCreateView {
+export default class TripPointView extends AbstractView {
 
   #offers = null;
   #destinations = null;

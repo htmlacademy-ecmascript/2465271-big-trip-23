@@ -54,5 +54,5 @@ export {
   filterTripByPast,
   filterTripByPresent,
   filterTripByFuture,
-  isEmpty
+  isEmpty,
 };

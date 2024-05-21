@@ -1,5 +1,6 @@
 import FilterPagePresenter from './presenter/filter-presenter';
 import MainPagePresenter from './presenter/main-presenter';
+import TripNewView from './view/trip-new-view';
 import EventModel from './model/event-model';
 import OffersModel from './model/offers-model';
 import DestinationsModel from './model/destination-model';
@@ -21,12 +22,27 @@ const mainPagePresenter = new MainPagePresenter({
   offersModel,
   destinationsModel,
   filterModel,
+  onNewPointDestroy: handleNewPointFormClose,
 });
+
 const filterPagePresenter = new FilterPagePresenter({
   filterContainer: pageTripFiltersElement,
   filterModel,
   eventModel,
 });
+
+const newPointButtonComponent = new TripNewView({
+  onClick: handleNewPointButtonClick
+});
+
+function handleNewPointFormClose() {
+  newPointButtonComponent.element.disabled = false;
+}
+
+function handleNewPointButtonClick() {
+  mainPagePresenter.createPoint();
+  newPointButtonComponent.element.disabled = true;
+}
 
 filterPagePresenter.init();
 mainPagePresenter.init();
