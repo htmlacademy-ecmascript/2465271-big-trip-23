@@ -1,12 +1,12 @@
 import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
-// import TripListEmptyView from '../view/trip-list-empty-view';
+import TripListEmptyView from '../view/trip-list-empty-view';
 // import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render, remove } from '../framework/render';
-import { sortByPrice, sortByTime } from '../utils/task';
+import { isEmpty, sortByPrice, sortByTime } from '../utils/task';
 import { filter } from '../utils/filter';
-import { SortTypes, EVENT_TYPES, UpdateType, UserAction } from '../const';
+import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../const';
 
 export default class MainPagePresenter {
   #boardContainer = null;
@@ -16,11 +16,13 @@ export default class MainPagePresenter {
   #filterModel = null;
 
   #sortComponent = null;
-  // #emptyMessageComponent = new TripListEmptyView(Object.values(FilterType));
+  #eventListComponent = new TripListView();
+  #emptyMessageComponent = null;
+
   #currentSortType = SortTypes.DAY;
+  #filterType = FilterType.EVERYTHING;
 
   // #sourcedEventPoints = [];
-  #eventListComponent = new TripListView();
   #pointPresenters = new Map();
 
   constructor({boardContainer, eventModel, offersModel, destinationsModel, filterModel}) {
@@ -34,9 +36,11 @@ export default class MainPagePresenter {
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    // const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#eventModel.points;
-    const filteredPoints = filter[filterType](points);
+    // const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortTypes.TIME:
@@ -123,9 +127,12 @@ export default class MainPagePresenter {
     this.#renderPoints(this.points);
   };
 
-  // #renderEmptyViewMessage () {
-  //   render(this.#emptyMessageComponent, this.#boardContainer);
-  // }
+  #renderEmptyViewMessage () {
+    this.#emptyMessageComponent = new TripListEmptyView({
+      filterType: this.#filterType
+    });
+    render(this.#emptyMessageComponent, this.#boardContainer);
+  }
 
   #renderTripSortView() {
     this.#sortComponent = new TripSortView({
@@ -146,10 +153,10 @@ export default class MainPagePresenter {
   // }
 
   #renderPoints(points) {
-    // if (isEmpty(points)) {
-    //   this.#renderEmptyViewMessage();
-    //   return;
-    // }
+    if (isEmpty(points)) {
+      this.#renderEmptyViewMessage();
+      return;
+    }
     this.#renderTripSortView(this.#eventModel.points);
     render(this.#eventListComponent, this.#boardContainer);
     points.forEach((point) => this.#renderPoint(point));
@@ -177,6 +184,10 @@ export default class MainPagePresenter {
 
     remove(this.#sortComponent);
     // remove(this.#emptyMessageComponent);
+
+    if (this.#emptyMessageComponent) {
+      remove(this.#emptyMessageComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortTypes.DAY;

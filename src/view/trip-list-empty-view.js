@@ -11,14 +11,14 @@ const createTripListEmptyTemplate = (filterType) => {
   );
 };
 export default class TripListEmptyView extends AbstractView {
-  #filter = '';
+  #filterType = null;
 
-  constructor({filter}) {
+  constructor({filterType}) {
     super();
-    this.#filter = filter;
+    this.#filterType = filterType;
   }
 
   get template() {
-    return createTripListEmptyTemplate(this.#filter);
+    return createTripListEmptyTemplate(this.#filterType);
   }
 }
