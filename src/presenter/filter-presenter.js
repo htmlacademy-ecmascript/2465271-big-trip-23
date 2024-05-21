@@ -1,20 +1,19 @@
 import TripFilterView from '../view/trip-filter-view';
 // import TripInfoView from '../view/trip-info-view';
 import { render, replace, remove } from '../framework/render';
-// import { generateSorterAndFilter } from '../utils/grader';
 import { filter } from '../utils/filter';
 import { FilterType, UpdateType } from '../const';
 
-export default class HeaderPagePresenter {
-  #headerContainer = null;
+export default class FilterPagePresenter {
+  #filterContainer = null;
   #filterModel = null;
   #eventModel = null;
 
   #filterComponent = null;
   // eventInfoComponent = new TripInfoView();
 
-  constructor({headerContainer, filterModel, eventModel}) {
-    this.#headerContainer = headerContainer;
+  constructor({filterContainer, filterModel, eventModel}) {
+    this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#eventModel = eventModel;
 
@@ -42,7 +41,7 @@ export default class HeaderPagePresenter {
     });
 
     if (prevFilterComponent === null) {
-      render(this.#filterComponent, this.#headerContainer);
+      render(this.#filterComponent, this.#filterContainer);
       return;
     }
 
@@ -61,17 +60,4 @@ export default class HeaderPagePresenter {
 
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   };
-
-  // init() {
-  //   this.#renderTripFilterView(this.#filterModel);
-  //   // render(this.eventInfoComponent, this.boardContainer.closest('.trip-main'), RenderPosition.AFTERBEGIN);
-  // }
-
-  // #renderTripFilterView () {
-  //   render(new TripFilterView({
-  //     filters,
-  //     currentFilterType: 'everything',
-  //     onFilterTypeChange: () => {},
-  //   }) , this.boardContainer);
-  // }
 }

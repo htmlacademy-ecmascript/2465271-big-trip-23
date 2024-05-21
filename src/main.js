@@ -1,11 +1,11 @@
-import HeaderPagePresenter from './presenter/header-presenter';
+import FilterPagePresenter from './presenter/filter-presenter';
 import MainPagePresenter from './presenter/main-presenter';
 import EventModel from './model/event-model';
 import OffersModel from './model/offers-model';
 import DestinationsModel from './model/destination-model';
 import FilterModel from './model/filter-model';
 
-const pageHeaderFiltersElement = document.querySelector('.trip-controls__filters');
+const pageTripFiltersElement = document.querySelector('.trip-controls__filters');
 const pageMainTripEventElement = document.querySelector('.trip-events');
 const eventModel = new EventModel();
 const offersModel = new OffersModel();
@@ -22,11 +22,11 @@ const mainPagePresenter = new MainPagePresenter({
   destinationsModel,
   filterModel,
 });
-const headerPagePresenter = new HeaderPagePresenter({
-  headerContainer: pageHeaderFiltersElement,
+const filterPagePresenter = new FilterPagePresenter({
+  filterContainer: pageTripFiltersElement,
   filterModel,
   eventModel,
 });
 
-headerPagePresenter.init();
+filterPagePresenter.init();
 mainPagePresenter.init();
