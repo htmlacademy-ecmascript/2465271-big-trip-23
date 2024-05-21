@@ -1,7 +1,7 @@
 import TripEditView from '../view/trip-edit-view';
 import TripPointView from '../view/trip-point-view';
 import { render, replace, remove } from '../framework/render';
-import { Mode } from '../const';
+import { Mode, UserAction, UpdateType } from '../const';
 
 export default class PointPresenter {
   #pointContainer = null;
@@ -47,6 +47,7 @@ export default class PointPresenter {
       eventTypes: this.#eventTypes,
       onFormSubmit: this.#handleFormSubmit,
       onCloseButtonClick: this.#handleCloseButtonClick,
+      onDeleteButtonClick: this.#handleDeleteClick,
     });
 
     if (prevPointEventComponent === null || prevEditEventComponent === null) {
@@ -98,7 +99,12 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    // this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #handleTripEditClick = () => {
@@ -106,12 +112,25 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+    // this.#handleDataChange(point);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this.#replaceEditFormToPointForm();
   };
 
   #handleCloseButtonClick = () => {
     this.#editEventComponent.reset(this.#point);
     this.#replaceEditFormToPointForm();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }

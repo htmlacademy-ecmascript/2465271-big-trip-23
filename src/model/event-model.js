@@ -1,43 +1,44 @@
-import { offersData } from '../mock/mock-offers';
-import { destinationsData } from '../mock/mock-destination';
+import Observable from '../framework/observable';
+// import { offersData } from '../mock/mock-offers';
+// import { destinationsData } from '../mock/mock-destination';
 import { pointsData } from '../mock/mock-points';
-import { FilterType, SortTypes, defaultEventPoint, EVENT_TYPES } from '../const';
+import { defaultEventPoint } from '../const';
 
-export default class EventModel {
+export default class EventModel extends Observable {
 
-  #offers = [];
-  #destinations = [];
+  // #offers = [];
+  // #destinations = [];
   #points = [];
-  #filters = [];
-  #sortTypes = [];
+  // #filters = [];
+  // #sortTypes = [];
   #defaultPoint = [];
-  #eventTypes = [];
+  // #eventTypes = [];
 
   init() {
-    this.#offers = offersData;
-    this.#destinations = destinationsData;
+    // this.#offers = offersData;
+    // this.#destinations = destinationsData;
     this.#points = pointsData;
-    this.#filters = Object.values(FilterType);
-    this.#sortTypes = SortTypes;
+    // this.#filters = Object.values(FilterType);
+    // this.#sortTypes = SortTypes;
     this.#defaultPoint = defaultEventPoint;
-    this.#eventTypes = EVENT_TYPES;
+    // this.#eventTypes = EVENT_TYPES;
   }
 
-  get offers() {
-    return this.#offers;
-  }
+  // get offers() {
+  //   return this.#offers;
+  // }
 
-  set offers (offers) {
-    this.#offers = offers;
-  }
+  // set offers (offers) {
+  //   this.#offers = offers;
+  // }
 
-  get destinations() {
-    return this.#destinations;
-  }
+  // get destinations() {
+  //   return this.#destinations;
+  // }
 
-  set destinations(destinations) {
-    this.#destinations = destinations;
-  }
+  // set destinations(destinations) {
+  //   this.#destinations = destinations;
+  // }
 
   get points() {
     return this.#points;
@@ -47,21 +48,21 @@ export default class EventModel {
     this.#points = points;
   }
 
-  get filters() {
-    return this.#filters;
-  }
+  // get filters() {
+  //   return this.#filters;
+  // }
 
-  set filters(filters) {
-    this.#filters = filters;
-  }
+  // set filters(filters) {
+  //   this.#filters = filters;
+  // }
 
-  get sortTypes() {
-    return this.#sortTypes;
-  }
+  // get sortTypes() {
+  //   return this.#sortTypes;
+  // }
 
-  set sortTypes(sortTypes) {
-    this.#sortTypes = sortTypes;
-  }
+  // set sortTypes(sortTypes) {
+  //   this.#sortTypes = sortTypes;
+  // }
 
   get defaultPoint() {
     return this.#defaultPoint;
@@ -71,11 +72,51 @@ export default class EventModel {
     this.#defaultPoint = defaultPoint;
   }
 
-  get eventTypes() {
-    return this.#eventTypes;
+  // get eventTypes() {
+  //   return this.#eventTypes;
+  // }
+
+  // set eventTypes(eventTypes) {
+  //   this.#eventTypes = eventTypes;
+  // }
+
+  updatePoint(updateType, update) {
+    const index = this.#points.findIndex((point) => point.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting task');
+    }
+
+    this.#points = [
+      ...this.#points.slice(0, index),
+      update,
+      ...this.#points.slice(index + 1),
+    ];
+
+    this._notify(updateType, update);
   }
 
-  set eventTypes(eventTypes) {
-    this.#eventTypes = eventTypes;
+  addPoint(updateType, update) {
+    this.#points = [
+      update,
+      ...this.#points,
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  deletePoint(updateType, update) {
+    const index = this.#points.findIndex((point) => point.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t delete unexisting task');
+    }
+
+    this.#points = [
+      ...this.#points.slice(0, index),
+      ...this.#points.slice(index + 1),
+    ];
+
+    this._notify(updateType);
   }
 }
