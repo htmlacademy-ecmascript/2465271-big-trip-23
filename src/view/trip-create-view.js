@@ -200,37 +200,36 @@ export default class TripCreateView extends AbstractStatefulView {
   };
 
   #setDateFromPicker() {
-    if(this._state.dateFrom) {
-      this.#dateFromPicker = flatpickr(
-        this.element.querySelector('[name="event-start-time"]'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          maxDate: this._state.dateTo,
-          defaulDate: this._state.dateFrom,
-          onClose: this.#dateFromChangeHandler,
-        },
-      );
-    }
+    this.#dateFromPicker = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        maxDate: this._state.dateTo,
+        defaulDate: this._state.dateFrom,
+        onClose: this.#dateFromChangeHandler,
+      },
+    );
   }
 
   #setDateToPicker() {
-    if(this._state.dateTo) {
-      this.#dateToPicker = flatpickr(
-        this.element.querySelector('[name="event-end-time"]'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          minDate: this._state.dateFrom,
-          defaulDate: this._state.dateTo,
-          onClose: this.#dateToChangeHandler,
-        },
-      );
-    }
+    this.#dateToPicker = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        minDate: this._state.dateFrom,
+        defaulDate: this._state.dateTo,
+        onClose: this.#dateToChangeHandler,
+      },
+    );
   }
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
+    if(!this._state) {
+      return;
+    }
     this.#handleSubmit(this._state);
   };
 

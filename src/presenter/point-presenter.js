@@ -99,7 +99,6 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    // this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -112,7 +111,6 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    // this.#handleDataChange(point);
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,

@@ -37,6 +37,7 @@ export default class MainPagePresenter {
       offers: this.#offersModel.offers,
       destinations: this.#destinationsModel.destinations,
       pointListContainer: this.#eventListComponent.element,
+      emptyMessageContainer: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
@@ -65,8 +66,11 @@ export default class MainPagePresenter {
   createPoint() {
     this.#currentSortType = SortTypes.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    // this.#renderTripCreateView();
     this.#newPointPresenter.init();
+    if (this.#emptyMessageComponent !== null) {
+      remove(this.#emptyMessageComponent);
+      this.#emptyMessageComponent = null;
+    }
   }
 
   #handleModeChange = () => {
@@ -104,36 +108,21 @@ export default class MainPagePresenter {
     }
   };
 
-  // #sortPoints (sortPoint) {
-  //   switch (sortPoint) {
-  //     case SortTypes.TIME:
-  //       this.#eventModel.points = sortByTime(this.#eventModel.points);
-  //       break;
-  //     case SortTypes.PRICE:
-  //       this.#eventModel.points = sortByPrice(this.#eventModel.points);
-  //       break;
-  //     default:
-  //       this.#eventModel.points = [...this.#sourcedEventPoints];
-  //   }
-  //   this.#currentSortType = sortPoint;
-  // }
-
   #handleSoptTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
-    // this.#sortPoints(sortType);
     this.#currentSortType = sortType;
     this.#clearPoints();
     this.#renderPoints(this.points);
   };
 
-  #renderEmptyViewMessage () {
+  #renderEmptyViewMessage = () => {
     this.#emptyMessageComponent = new TripListEmptyView({
       filterType: this.#filterType
     });
     render(this.#emptyMessageComponent, this.#boardContainer);
-  }
+  };
 
   #renderTripSortView() {
     this.#sortComponent = new TripSortView({
@@ -185,7 +174,6 @@ export default class MainPagePresenter {
     this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
-    // remove(this.#emptyMessageComponent);
 
     if (this.#emptyMessageComponent) {
       remove(this.#emptyMessageComponent);
