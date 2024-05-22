@@ -164,7 +164,8 @@ export default class TripEditView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
-    this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormDelete);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onFormDelete);
+    this.element.addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
     this.#setDateFromPicker();
@@ -250,5 +251,22 @@ export default class TripEditView extends AbstractStatefulView {
   #onFormDelete = (evt) => {
     evt.preventDefault();
     this.#handleDelete(this._state);
+  };
+
+  #onOffersChange = (evt) => {
+    evt.preventDefault();
+    const currentOffer = Number(evt.target.id.replace(/\D/g, ''));
+    const setOffers = (state) => {
+      if(state.includes(currentOffer)) {
+        const cutState = state.filter((elem) => elem !== currentOffer);
+        return cutState;
+      } else {
+        state.push(currentOffer);
+        return state;
+      }
+    };
+    this._setState({
+      offers: setOffers(this._state.offers),
+    });
   };
 }
