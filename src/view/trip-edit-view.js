@@ -166,6 +166,7 @@ export default class TripEditView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onFormDelete);
     this.element.addEventListener('change', this.#onOffersChange);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
     this.#setDateFromPicker();
@@ -209,33 +210,29 @@ export default class TripEditView extends AbstractStatefulView {
   };
 
   #setDateFromPicker() {
-    if(this._state.dateFrom) {
-      this.#dateFromPicker = flatpickr(
-        this.element.querySelector('[name="event-start-time"]'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          maxDate: this._state.dateTo,
-          defaulDate: this._state.dateFrom,
-          onClose: this.#dateFromChangeHandler,
-        },
-      );
-    }
+    this.#dateFromPicker = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        maxDate: this._state.dateTo,
+        defaulDate: this._state.dateFrom,
+        onClose: this.#dateFromChangeHandler,
+      },
+    );
   }
 
   #setDateToPicker() {
-    if(this._state.dateTo) {
-      this.#dateToPicker = flatpickr(
-        this.element.querySelector('[name="event-end-time"]'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          minDate: this._state.dateFrom,
-          defaulDate: this._state.dateTo,
-          onClose: this.#dateToChangeHandler,
-        },
-      );
-    }
+    this.#dateToPicker = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        minDate: this._state.dateFrom,
+        defaulDate: this._state.dateTo,
+        onClose: this.#dateToChangeHandler,
+      },
+    );
   }
 
   #onFormSubmit = (evt) => {
@@ -267,6 +264,13 @@ export default class TripEditView extends AbstractStatefulView {
     };
     this._setState({
       offers: setOffers(this._state.offers),
+    });
+  };
+
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value,
     });
   };
 }

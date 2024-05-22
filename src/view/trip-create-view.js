@@ -159,6 +159,7 @@ export default class TripCreateView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormDelete);
     this.element.querySelector('.event__section--offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
     this.#setDateFromPicker();
     this.#setDateToPicker();
@@ -253,6 +254,13 @@ export default class TripCreateView extends AbstractStatefulView {
     };
     this._setState({
       offers: setOffers(this._state.offers),
+    });
+  };
+
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value,
     });
   };
 }
