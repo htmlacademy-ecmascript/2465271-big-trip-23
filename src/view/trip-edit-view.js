@@ -1,5 +1,6 @@
 import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -74,7 +75,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
             <label class="event__label  event__type-output" for="event-destination-${eventId}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${name}" list="destination-list-${eventId}">
+            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}">
             <datalist id="destination-list-${eventId}">
               ${destinations.map((elem) => createEventDestinationList(elem.name))}
             </datalist>
@@ -105,7 +106,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
     ${typeOffers.length !== 0 || description ?
       `<section class="event__details">
         ${typeOffers ? createOffersContainer() : ''}
-        ${description ? createDescriptionContainer() : ''}
+        ${description || pictures.length !== 0 ? createDescriptionContainer() : ''}
       </section>` : ''
     }
       </form>
@@ -269,8 +270,10 @@ export default class TripEditView extends AbstractStatefulView {
 
   #onPriceInput = (evt) => {
     evt.preventDefault();
-    this._setState({
-      basePrice: evt.target.value,
-    });
+    if (!isNaN(evt.target.value)) {
+      this._setState({
+        basePrice: evt.target.value,
+      });
+    }
   };
 }

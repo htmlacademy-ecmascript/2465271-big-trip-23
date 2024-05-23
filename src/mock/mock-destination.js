@@ -3,7 +3,7 @@ import { getRandomDescriptionPhoto } from '../utils/task';
 export const destinationsData = [
   {
     id: 1,
-    description: '',
+    description: 'Khabarovsk, is a beautiful city, a true asian pearl, with crowded streets. Hamburg, is a beautiful city, a true asian pearl, with crowded streets. Hamburg, is a beautiful city, a true asian pearl, with crowded streets.',
     name: 'Khabarovsk',
     pictures: []
   },
@@ -57,7 +57,7 @@ export const destinationsData = [
   },
   {
     id: 5,
-    description: 'Dubai, is a beautiful city, a true asian pearl, with crowded streets. Dubai, is a beautiful city, a true asian pearl, with crowded streets. Dubai, is a beautiful city, a true asian pearl, with crowded streets. Dubai, is a beautiful city, a true asian pearl, with crowded streets.',
+    description: '',
     name: 'Dubai',
     pictures: [
       {

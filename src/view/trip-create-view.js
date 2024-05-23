@@ -1,5 +1,6 @@
 import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -74,7 +75,7 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
             <label class="event__label  event__type-output" for="event-destination-${eventId}">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${name}" list="destination-list-${eventId}">
+            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}">
             <datalist id="destination-list-${eventId}">
               ${destinations.map((elem) => createEventDestinationList(elem.name))}
             </datalist>
