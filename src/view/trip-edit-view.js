@@ -103,9 +103,9 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
-    ${typeOffers.length !== 0 || description ?
+    ${typeOffers.length !== 0 || description || pictures.length !== 0 ?
       `<section class="event__details">
-        ${typeOffers ? createOffersContainer() : ''}
+        ${typeOffers.length !== 0 ? createOffersContainer() : ''}
         ${description || pictures.length !== 0 ? createDescriptionContainer() : ''}
       </section>` : ''
     }
@@ -216,6 +216,7 @@ export default class TripEditView extends AbstractStatefulView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        'time_24hr': true,
         maxDate: this._state.dateTo,
         defaulDate: this._state.dateFrom,
         onClose: this.#dateFromChangeHandler,
@@ -229,6 +230,7 @@ export default class TripEditView extends AbstractStatefulView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        'time_24hr': true,
         minDate: this._state.dateFrom,
         defaulDate: this._state.dateTo,
         onClose: this.#dateToChangeHandler,
@@ -270,9 +272,14 @@ export default class TripEditView extends AbstractStatefulView {
 
   #onPriceInput = (evt) => {
     evt.preventDefault();
+    const currentPrice = this.#point.basePrice;
     if (!isNaN(evt.target.value)) {
       this._setState({
         basePrice: evt.target.value,
+      });
+    } if(!this._state.basePrice) {
+      this._setState({
+        basePrice: currentPrice,
       });
     }
   };

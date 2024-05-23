@@ -100,10 +100,10 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
-    ${typeOffers.length !== 0 || description ?
+    ${typeOffers.length !== 0 || description || pictures.length !== 0 ?
       `<section class="event__details">
-        ${typeOffers ? createOffersContainer() : ''}
-        ${description ? createDescriptionContainer() : ''}
+        ${typeOffers.length !== 0 ? createOffersContainer() : ''}
+        ${description || pictures.length !== 0 ? createDescriptionContainer() : ''}
       </section>` : ''
     }
       </form>
@@ -158,7 +158,7 @@ export default class TripCreateView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormDelete);
-    this.element.querySelector('.event__section--offers').addEventListener('change', this.#onOffersChange);
+    this.element.addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
@@ -208,6 +208,7 @@ export default class TripCreateView extends AbstractStatefulView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        'time_24hr': true,
         maxDate: this._state.dateTo,
         defaulDate: this._state.dateFrom,
         onClose: this.#dateFromChangeHandler,
@@ -221,6 +222,7 @@ export default class TripCreateView extends AbstractStatefulView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        'time_24hr': true,
         minDate: this._state.dateFrom,
         defaulDate: this._state.dateTo,
         onClose: this.#dateToChangeHandler,
@@ -260,8 +262,15 @@ export default class TripCreateView extends AbstractStatefulView {
 
   #onPriceInput = (evt) => {
     evt.preventDefault();
-    this._setState({
-      basePrice: evt.target.value,
-    });
+    const currentPrice = this.#point.basePrice;
+    if (!isNaN(evt.target.value)) {
+      this._setState({
+        basePrice: evt.target.value,
+      });
+    } if(!this._state.basePrice) {
+      this._setState({
+        basePrice: currentPrice,
+      });
+    }
   };
 }
