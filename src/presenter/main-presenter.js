@@ -5,7 +5,7 @@ import NewPointPresenter from './new-point-presenter';
 // import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render, remove } from '../framework/render';
-import { isEmpty, sortByPrice, sortByTime } from '../utils/task';
+import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay } from '../utils/task';
 import { filter } from '../utils/filter';
 import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../const';
 
@@ -56,7 +56,7 @@ export default class MainPagePresenter {
       case SortTypes.PRICE:
         return sortByPrice(filteredPoints);
     }
-    return filteredPoints;
+    return sortDefaultByDay(filteredPoints);
   }
 
   init() {

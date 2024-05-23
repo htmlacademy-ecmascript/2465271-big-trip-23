@@ -265,7 +265,7 @@ export default class TripCreateView extends AbstractStatefulView {
     const currentPrice = this.#point.basePrice;
     if (!isNaN(evt.target.value)) {
       this._setState({
-        basePrice: evt.target.value,
+        basePrice: he.encode(evt.target.value),
       });
     } if(!this._state.basePrice) {
       this._setState({
