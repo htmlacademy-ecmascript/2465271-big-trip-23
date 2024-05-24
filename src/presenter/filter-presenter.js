@@ -1,7 +1,7 @@
 import TripFilterView from '../view/trip-filter-view';
 // import TripInfoView from '../view/trip-info-view';
 import { render, replace, remove } from '../framework/render';
-import { filter } from '../utils/filter';
+import { filter } from '../utils/task';
 import { FilterType, UpdateType } from '../const';
 
 export default class FilterPagePresenter {

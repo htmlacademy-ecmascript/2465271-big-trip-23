@@ -5,8 +5,7 @@ import NewPointPresenter from './new-point-presenter';
 // import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render, remove } from '../framework/render';
-import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay } from '../utils/task';
-import { filter } from '../utils/filter';
+import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay, filter } from '../utils/task';
 import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../const';
 
 export default class MainPagePresenter {
