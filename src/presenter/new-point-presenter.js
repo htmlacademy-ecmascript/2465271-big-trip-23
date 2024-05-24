@@ -6,7 +6,7 @@ export default class NewPointPresenter {
   #offers = null;
   #destinations = null;
   #pointListContainer = null;
-  #emptyMessage = null;
+  #emptyMessageRender = null;
   #handleDataChange = null;
   #handleDestroy = null;
   #defaultPoint = defaultEventPoint;
@@ -14,11 +14,11 @@ export default class NewPointPresenter {
 
   #newPointComponent = null;
 
-  constructor({offers, destinations, pointListContainer, emptyMessageContainer, onDataChange, onDestroy}) {
+  constructor({offers, destinations, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
     this.#offers = offers;
     this.#destinations = destinations;
     this.#pointListContainer = pointListContainer;
-    this.#emptyMessage = emptyMessageContainer;
+    this.#emptyMessageRender = emptyMessageRender;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
@@ -67,7 +67,7 @@ export default class NewPointPresenter {
   #handleDeleteClick = () => {
     this.destroy();
     if(this.#pointListContainer.childElementCount === 0) {
-      this.#emptyMessage();
+      this.#emptyMessageRender();
     }
   };
 
@@ -77,7 +77,7 @@ export default class NewPointPresenter {
       this.destroy();
     }
     if(this.#pointListContainer.childElementCount === 0) {
-      this.#emptyMessage();
+      this.#emptyMessageRender();
     }
   };
 }

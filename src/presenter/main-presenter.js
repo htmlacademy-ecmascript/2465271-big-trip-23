@@ -35,7 +35,7 @@ export default class MainPagePresenter {
       offers: this.#offersModel.offers,
       destinations: this.#destinationsModel.destinations,
       pointListContainer: this.#eventListComponent.element,
-      emptyMessageContainer: this.#renderEmptyViewMessage,
+      emptyMessageRender: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
