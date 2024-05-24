@@ -1,24 +1,24 @@
 import FilterPagePresenter from './presenter/filter-presenter';
 import MainPagePresenter from './presenter/main-presenter';
 import TripNewView from './view/trip-new-view';
-import EventModel from './model/event-model';
+import PointsModel from './model/points-model';
 import OffersModel from './model/offers-model';
-import DestinationsModel from './model/destination-model';
+import DestinationsModel from './model/destinations-model';
 import FilterModel from './model/filter-model';
 
 const pageTripFiltersElement = document.querySelector('.trip-controls__filters');
 const pageMainTripEventElement = document.querySelector('.trip-events');
-const eventModel = new EventModel();
+const pointsModel = new PointsModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
-eventModel.init();
+pointsModel.init();
 offersModel.init();
 destinationsModel.init();
 
 const mainPagePresenter = new MainPagePresenter({
   boardContainer: pageMainTripEventElement,
-  eventModel,
+  pointsModel,
   offersModel,
   destinationsModel,
   filterModel,
@@ -28,7 +28,7 @@ const mainPagePresenter = new MainPagePresenter({
 const filterPagePresenter = new FilterPagePresenter({
   filterContainer: pageTripFiltersElement,
   filterModel,
-  eventModel,
+  pointsModel,
 });
 
 const newPointButtonComponent = new TripNewView({

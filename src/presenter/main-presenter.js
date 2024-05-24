@@ -2,7 +2,6 @@ import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import NewPointPresenter from './new-point-presenter';
-// import TripCreateView from '../view/trip-create-view';
 import PointPresenter from './point-presenter';
 import { render, remove } from '../framework/render';
 import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay, filter } from '../utils/task';
@@ -10,7 +9,7 @@ import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../c
 
 export default class MainPagePresenter {
   #boardContainer = null;
-  #eventModel = null;
+  #pointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
   #filterModel = null;
@@ -25,9 +24,9 @@ export default class MainPagePresenter {
   #pointPresenters = new Map();
   #newPointPresenter = null;
 
-  constructor({boardContainer, eventModel, offersModel, destinationsModel, filterModel, onNewPointDestroy}) {
+  constructor({boardContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy}) {
     this.#boardContainer = boardContainer;
-    this.#eventModel = eventModel;
+    this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
@@ -40,13 +39,13 @@ export default class MainPagePresenter {
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
-    this.#eventModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    const points = this.#eventModel.points;
+    const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
@@ -80,13 +79,13 @@ export default class MainPagePresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#eventModel.updatePoint(updateType, update);
+        this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
-        this.#eventModel.addPoint(updateType, update);
+        this.#pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
-        this.#eventModel.deletePoint(updateType, update);
+        this.#pointsModel.deletePoint(updateType, update);
         break;
     }
   };
@@ -131,22 +130,12 @@ export default class MainPagePresenter {
     render(this.#sortComponent, this.#boardContainer);
   }
 
-  // #renderTripCreateView() {
-  //   const pointCreateComponent = new TripCreateView (
-  //     this.#offersModel.offers,
-  //     this.#destinationsModel.destinations,
-  //     defaultEventPoint,
-  //     EVENT_TYPES,
-  //   );
-  //   render(pointCreateComponent, this.#eventListComponent.element);
-  // }
-
   #renderPoints(points) {
     if (isEmpty(points)) {
       this.#renderEmptyViewMessage();
       return;
     }
-    this.#renderTripSortView(this.#eventModel.points);
+    this.#renderTripSortView(this.#pointsModel.points);
     render(this.#eventListComponent, this.#boardContainer);
     points.forEach((point) => this.#renderPoint(point));
   }

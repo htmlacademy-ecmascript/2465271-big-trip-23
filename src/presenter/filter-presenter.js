@@ -7,22 +7,22 @@ import { FilterType, UpdateType } from '../const';
 export default class FilterPagePresenter {
   #filterContainer = null;
   #filterModel = null;
-  #eventModel = null;
+  #pointsModel = null;
 
   #filterComponent = null;
   // eventInfoComponent = new TripInfoView();
 
-  constructor({filterContainer, filterModel, eventModel}) {
+  constructor({filterContainer, filterModel, pointsModel}) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
-    this.#eventModel = eventModel;
+    this.#pointsModel = pointsModel;
 
-    this.#eventModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get filters() {
-    const points = this.#eventModel.points;
+    const points = this.#pointsModel.points;
 
     return Object.values(FilterType).map((type) => ({
       type,
