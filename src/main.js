@@ -17,7 +17,7 @@ offersModel.init();
 destinationsModel.init();
 
 const mainPagePresenter = new MainPagePresenter({
-  boardContainer: pageMainTripEventElement,
+  pointsContainer: pageMainTripEventElement,
   pointsModel,
   offersModel,
   destinationsModel,

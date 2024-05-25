@@ -2,7 +2,7 @@ import Observable from '../framework/observable';
 import { pointsData } from '../mock/mock-points';
 import { defaultEventPoint } from '../const';
 
-export default class PointsModel extends Observable {
+export default class EventModel extends Observable {
 
   #points = [];
   #defaultPoint = [];

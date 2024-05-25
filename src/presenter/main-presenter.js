@@ -8,24 +8,24 @@ import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay, filter } from '../u
 import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../const';
 
 export default class MainPagePresenter {
-  #boardContainer = null;
+  #pointsContainer = null;
   #pointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
   #filterModel = null;
 
   #sortComponent = null;
-  #eventListComponent = new TripListView();
+  #pointsListComponent = new TripListView();
   #emptyMessageComponent = null;
 
   #currentSortType = SortTypes.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  #pointPresenters = new Map();
+  #pointPresenter = new Map();
   #newPointPresenter = null;
 
-  constructor({boardContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy}) {
-    this.#boardContainer = boardContainer;
+  constructor({pointsContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy}) {
+    this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
@@ -34,7 +34,8 @@ export default class MainPagePresenter {
     this.#newPointPresenter = new NewPointPresenter({
       offers: this.#offersModel.offers,
       destinations: this.#destinationsModel.destinations,
-      pointListContainer: this.#eventListComponent.element,
+      pointsContainer: this.#pointsContainer,
+      pointListContainer: this.#pointsListComponent,
       emptyMessageRender: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
@@ -73,7 +74,7 @@ export default class MainPagePresenter {
 
   #handleModeChange = () => {
     this.#newPointPresenter.destroy();
-    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -93,7 +94,7 @@ export default class MainPagePresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenters.get(data.id).init(data);
+        this.#pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearPoints();
@@ -119,7 +120,7 @@ export default class MainPagePresenter {
     this.#emptyMessageComponent = new TripListEmptyView({
       filterType: this.#filterType
     });
-    render(this.#emptyMessageComponent, this.#boardContainer);
+    render(this.#emptyMessageComponent, this.#pointsContainer);
   };
 
   #renderTripSortView() {
@@ -127,22 +128,23 @@ export default class MainPagePresenter {
       currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSoptTypeChange
     });
-    render(this.#sortComponent, this.#boardContainer);
+    render(this.#sortComponent, this.#pointsContainer);
   }
 
   #renderPoints(points) {
     if (isEmpty(points)) {
+      remove(this.#pointsListComponent);
       this.#renderEmptyViewMessage();
       return;
     }
-    this.#renderTripSortView(this.#pointsModel.points);
-    render(this.#eventListComponent, this.#boardContainer);
+    this.#renderTripSortView(this.points);
+    render(this.#pointsListComponent, this.#pointsContainer);
     points.forEach((point) => this.#renderPoint(point));
   }
 
   #renderPoint (point) {
     const pointPresenter = new PointPresenter({
-      pointContainer: this.#eventListComponent.element,
+      pointContainer: this.#pointsListComponent,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
@@ -152,16 +154,20 @@ export default class MainPagePresenter {
       point,
       EVENT_TYPES,
     );
-    this.#pointPresenters.set(point.id, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #clearPoints({resetSortType = false} = {}) {
 
     this.#newPointPresenter.destroy();
-    this.#pointPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointPresenters.clear();
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+
+    if(this.#pointsListComponent) {
+      remove(this.#pointsListComponent);
+    }
 
     if (this.#emptyMessageComponent) {
       remove(this.#emptyMessageComponent);

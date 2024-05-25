@@ -5,7 +5,7 @@ import { Mode, UserAction, UpdateType } from '../const';
 
 export default class PointPresenter {
   #pointContainer = null;
-  #pointEventComponent = null;
+  #pointComponent = null;
   #editEventComponent = null;
 
   #offers = null;
@@ -29,10 +29,10 @@ export default class PointPresenter {
     this.#point = point;
     this.#eventTypes = eventTypes;
 
-    const prevPointEventComponent = this.#pointEventComponent;
+    const prevPointComponent = this.#pointComponent;
     const prevEditEventComponent = this.#editEventComponent;
 
-    this.#pointEventComponent = new TripPointView({
+    this.#pointComponent = new TripPointView({
       offers: this.#offers,
       destinations: this.#destinations,
       point: this.#point,
@@ -46,27 +46,27 @@ export default class PointPresenter {
       point: this.#point,
       eventTypes: this.#eventTypes,
       onFormSubmit: this.#handleFormSubmit,
-      onCloseButtonClick: this.#handleCloseButtonClick,
       onDeleteButtonClick: this.#handleDeleteClick,
+      onCloseButtonClick: this.#handleCloseButtonClick,
     });
 
-    if (prevPointEventComponent === null || prevEditEventComponent === null) {
-      render(this.#pointEventComponent, this.#pointContainer);
+    if (prevPointComponent === null || prevEditEventComponent === null) {
+      render(this.#pointComponent, this.#pointContainer.element);
       return;
     }
     if (this.#mode === Mode.DEFAULT) {
-      replace(this.#pointEventComponent, prevPointEventComponent);
+      replace(this.#pointComponent, prevPointComponent);
     }
     if (this.#mode === Mode.EDITING) {
       replace(this.#editEventComponent, prevEditEventComponent);
     }
 
-    remove(prevPointEventComponent);
+    remove(prevPointComponent);
     remove(prevEditEventComponent);
   }
 
   destroy() {
-    remove(this.#pointEventComponent);
+    remove(this.#pointComponent);
     remove(this.#editEventComponent);
   }
 
@@ -78,14 +78,14 @@ export default class PointPresenter {
   }
 
   #replacePointFormToEditForm() {
-    replace(this.#editEventComponent, this.#pointEventComponent);
+    replace(this.#editEventComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceEditFormToPointForm () {
-    replace(this.#pointEventComponent, this.#editEventComponent);
+    replace(this.#pointComponent, this.#editEventComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   }
@@ -130,5 +130,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point,
     );
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 }

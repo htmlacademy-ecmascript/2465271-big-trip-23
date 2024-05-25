@@ -126,7 +126,7 @@ export default class TripEditView extends AbstractStatefulView {
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({offers, destinations, point, eventTypes, onFormSubmit, onCloseButtonClick, onDeleteButtonClick}) {
+  constructor({offers, destinations, point, eventTypes, onFormSubmit, onDeleteButtonClick, onCloseButtonClick}) {
     super();
     this._setState(point);
     this.#offers = offers;
@@ -136,7 +136,6 @@ export default class TripEditView extends AbstractStatefulView {
     this.#handleSubmit = onFormSubmit;
     this.#handleCancel = onCloseButtonClick;
     this.#handleDelete = onDeleteButtonClick;
-
     this._restoreHandlers();
   }
 
@@ -240,6 +239,9 @@ export default class TripEditView extends AbstractStatefulView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
+    if(!this._state) {
+      return;
+    }
     this.#handleSubmit(this._state);
   };
 
@@ -255,7 +257,7 @@ export default class TripEditView extends AbstractStatefulView {
 
   #onOffersChange = (evt) => {
     evt.preventDefault();
-    const currentOffer = Number(evt.target.id.replace(/\D/g, ''));
+    const currentOffer = evt.target.id.replace(/\D/g, '');
     const setOffers = (state) => {
       if(state.includes(currentOffer)) {
         const cutState = state.filter((elem) => elem !== currentOffer);

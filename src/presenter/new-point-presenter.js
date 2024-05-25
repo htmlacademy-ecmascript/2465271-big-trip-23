@@ -1,22 +1,25 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
-import TripCreateView from '../view/trip-create-view.js';
-import { EVENT_TYPES, defaultEventPoint, UserAction, UpdateType} from '../const.js';
+import TripEditView from '../view/trip-edit-view.js';
+import { EVENT_TYPES, UserAction, UpdateType} from '../const.js';
+import { randomeId } from '../utils/task.js';
 
 export default class NewPointPresenter {
   #offers = null;
   #destinations = null;
+  #pointsConatainer = null;
   #pointListContainer = null;
   #emptyMessageRender = null;
   #handleDataChange = null;
   #handleDestroy = null;
-  #defaultPoint = defaultEventPoint;
+  // #defaultPoint = randomeId();
   #eventTypes = EVENT_TYPES;
 
   #newPointComponent = null;
 
-  constructor({offers, destinations, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
+  constructor({offers, destinations, pointsContainer, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#pointsConatainer = pointsContainer;
     this.#pointListContainer = pointListContainer;
     this.#emptyMessageRender = emptyMessageRender;
     this.#handleDataChange = onDataChange;
@@ -28,16 +31,18 @@ export default class NewPointPresenter {
       return;
     }
 
-    this.#newPointComponent = new TripCreateView({
+    this.#newPointComponent = new TripEditView({
       offers: this.#offers,
       destinations: this.#destinations,
-      point: this.#defaultPoint,
+      point: randomeId(),
       eventTypes: this.#eventTypes,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteButtonClick: this.#handleDeleteClick,
     });
 
-    render(this.#newPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#newPointComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);
+
+    render(this.#pointListContainer, this.#pointsConatainer);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
@@ -52,6 +57,10 @@ export default class NewPointPresenter {
     remove(this.#newPointComponent);
     this.#newPointComponent = null;
 
+    if(this.#pointListContainer.element.childElementCount === 0) {
+      remove(this.#pointListContainer);
+      this.#emptyMessageRender();
+    }
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
@@ -66,18 +75,12 @@ export default class NewPointPresenter {
 
   #handleDeleteClick = () => {
     this.destroy();
-    if(this.#pointListContainer.childElementCount === 0) {
-      this.#emptyMessageRender();
-    }
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
-    }
-    if(this.#pointListContainer.childElementCount === 0) {
-      this.#emptyMessageRender();
     }
   };
 }

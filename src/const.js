@@ -36,7 +36,7 @@ const defaultEventPoint = {
   basePrice: 0,
   dateFrom: '',
   dateTo: '',
-  destination: 0,
+  destination: '',
   isFavorite: false,
   offers: [],
   type: EVENT_TYPES[5],
