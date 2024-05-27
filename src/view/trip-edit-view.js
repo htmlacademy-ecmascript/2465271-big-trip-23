@@ -1,5 +1,6 @@
 import { getFirstWordCapitalize, displayEditTime } from '../utils/task';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -74,7 +75,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
             <label class="event__label  event__type-output" for="event-destination-${eventId}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${name}" list="destination-list-${eventId}">
+            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}">
             <datalist id="destination-list-${eventId}">
               ${destinations.map((elem) => createEventDestinationList(elem.name))}
             </datalist>
@@ -102,10 +103,10 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
-    ${typeOffers.length !== 0 || description ?
+    ${typeOffers.length !== 0 || description || pictures.length !== 0 ?
       `<section class="event__details">
-        ${typeOffers ? createOffersContainer() : ''}
-        ${description ? createDescriptionContainer() : ''}
+        ${typeOffers.length !== 0 ? createOffersContainer() : ''}
+        ${description || pictures.length !== 0 ? createDescriptionContainer() : ''}
       </section>` : ''
     }
       </form>
@@ -121,10 +122,11 @@ export default class TripEditView extends AbstractStatefulView {
   #eventTypes = null;
   #handleSubmit = null;
   #handleCancel = null;
+  #handleDelete = null;
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({offers, destinations, point, eventTypes, onFormSubmit, onCloseButtonClick}) {
+  constructor({offers, destinations, point, eventTypes, onFormSubmit, onDeleteButtonClick, onCloseButtonClick}) {
     super();
     this._setState(point);
     this.#offers = offers;
@@ -133,7 +135,7 @@ export default class TripEditView extends AbstractStatefulView {
     this.#eventTypes = eventTypes;
     this.#handleSubmit = onFormSubmit;
     this.#handleCancel = onCloseButtonClick;
-
+    this.#handleDelete = onDeleteButtonClick;
     this._restoreHandlers();
   }
 
@@ -162,7 +164,9 @@ export default class TripEditView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
-    this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormCancel);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onFormDelete);
+    this.element.addEventListener('change', this.#onOffersChange);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
     this.#setDateFromPicker();
@@ -206,42 +210,79 @@ export default class TripEditView extends AbstractStatefulView {
   };
 
   #setDateFromPicker() {
-    if(this._state.dateFrom) {
-      this.#dateFromPicker = flatpickr(
-        this.element.querySelector('[name="event-start-time"]'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          maxDate: this._state.dateTo,
-          defaulDate: this._state.dateFrom,
-          onClose: this.#dateFromChangeHandler,
-        },
-      );
-    }
+    this.#dateFromPicker = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        'time_24hr': true,
+        maxDate: this._state.dateTo,
+        defaulDate: this._state.dateFrom,
+        onClose: this.#dateFromChangeHandler,
+      },
+    );
   }
 
   #setDateToPicker() {
-    if(this._state.dateTo) {
-      this.#dateToPicker = flatpickr(
-        this.element.querySelector('[name="event-end-time"]'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          minDate: this._state.dateFrom,
-          defaulDate: this._state.dateTo,
-          onClose: this.#dateToChangeHandler,
-        },
-      );
-    }
+    this.#dateToPicker = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        'time_24hr': true,
+        minDate: this._state.dateFrom,
+        defaulDate: this._state.dateTo,
+        onClose: this.#dateToChangeHandler,
+      },
+    );
   }
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
+    if(!this._state) {
+      return;
+    }
     this.#handleSubmit(this._state);
   };
 
   #onFormCancel = (evt) => {
     evt.preventDefault();
     this.#handleCancel();
+  };
+
+  #onFormDelete = (evt) => {
+    evt.preventDefault();
+    this.#handleDelete(this._state);
+  };
+
+  #onOffersChange = (evt) => {
+    evt.preventDefault();
+    const currentOffer = evt.target.id.replace(/\D/g, '');
+    const setOffers = (state) => {
+      if(state.includes(currentOffer)) {
+        const cutState = state.filter((elem) => elem !== currentOffer);
+        return cutState;
+      } else {
+        state.push(currentOffer);
+        return state;
+      }
+    };
+    this._setState({
+      offers: setOffers(this._state.offers),
+    });
+  };
+
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    const currentPrice = this.#point.basePrice;
+    if (!isNaN(evt.target.value)) {
+      this._setState({
+        basePrice: he.encode(evt.target.value),
+      });
+    } if(!this._state.basePrice) {
+      this._setState({
+        basePrice: currentPrice,
+      });
+    }
   };
 }

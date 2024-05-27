@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { TimeType, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { nanoid } from 'nanoid';
+import { TimeType, FilterType, defaultEventPoint, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
 import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
@@ -32,13 +33,34 @@ const getDuration = (dateFrom, dateTo) => {
 };
 
 const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
+
 const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
+
 const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(b.dateTo).diff(dayjs(b.dateFrom)) - dayjs(a.dateTo).diff(dayjs(a.dateFrom)));
+
 const filterTripByEverything = (tripPoints) => tripPoints;
+
 const filterTripByPast = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateTo).getTime() < Date.now());
+
 const filterTripByPresent = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateFrom).getTime() <= Date.now() && new Date (trip.dateTo).getTime() >= Date.now());
+
 const filterTripByFuture = (tripPoints) => tripPoints.filter((trip) => new Date (trip.dateFrom).getTime() > Date.now());
+
 const isEmpty = (data) => data.length === 0;
+
+function randomeId () {
+  return {
+    id: nanoid(),
+    ...defaultEventPoint
+  };
+}
+
+const filter = {
+  [FilterType.EVERYTHING]: (tripPoints) => filterTripByEverything(tripPoints),
+  [FilterType.PAST]: (tripPoints) => filterTripByPast(tripPoints),
+  [FilterType.PRESENT]: (tripPoints) => filterTripByPresent(tripPoints),
+  [FilterType.FUTURE]: (tripPoints) => filterTripByFuture(tripPoints),
+};
 
 export {
   getRandomDescriptionPhoto,
@@ -54,5 +76,7 @@ export {
   filterTripByPast,
   filterTripByPresent,
   filterTripByFuture,
-  isEmpty
+  isEmpty,
+  filter,
+  randomeId
 };

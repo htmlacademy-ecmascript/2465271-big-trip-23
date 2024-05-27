@@ -1,11 +1,12 @@
 import { displayEventTime, displayEventDate, getDuration } from '../utils/task';
-import TripCreateView from './trip-create-view';
+import AbstractView from '../framework/view/abstract-view';
 
 const createTripPointTemplate = (offers, destinations, point) => {
   const {dateFrom, dateTo, isFavorite, basePrice, type} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
-  const pointDestination = destinations.find((elem) => elem.id === point.destination);
+  const pointDestination = destinations.find((elem) => elem.id === point.destination) || {};
+  const {name = ''} = pointDestination;
 
   const createOffersData = (title, price) =>
     `<li class="event__offer">
@@ -22,7 +23,7 @@ const createTripPointTemplate = (offers, destinations, point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${pointDestination.name}</h3>
+      <h3 class="event__title">${type} ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime=${dateFrom}>${displayEventTime(dateFrom)}</time>
@@ -51,7 +52,7 @@ const createTripPointTemplate = (offers, destinations, point) => {
   </li>`);
 };
 
-export default class TripPointView extends TripCreateView {
+export default class TripPointView extends AbstractView {
 
   #offers = null;
   #destinations = null;
