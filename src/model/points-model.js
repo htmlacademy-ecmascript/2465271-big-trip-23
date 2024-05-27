@@ -2,10 +2,24 @@ import Observable from '../framework/observable';
 import { pointsData } from '../mock/mock-points';
 import { defaultEventPoint } from '../const';
 
-export default class EventModel extends Observable {
+export default class PointsModel extends Observable {
 
   #points = [];
   #defaultPoint = [];
+  #pointsApiService = null;
+
+  constructor({pointsApiService}) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+      points.map(this.#adaptToClient);
+      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+      // а ещё на сервере используется snake_case, а у нас camelCase.
+      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+      // Есть вариант получше - паттерн "Адаптер"
+    });
+  }
 
   init() {
     this.#points = pointsData;
@@ -66,5 +80,21 @@ export default class EventModel extends Observable {
     ];
 
     this._notify(updateType);
+  }
+
+  #adaptToClient(point) {
+    const adaptedTask = {...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      isFavorite: point['is_favorite'],
+    };
+
+    delete adaptedTask['base_price'];
+    delete adaptedTask['date_from'];
+    delete adaptedTask['date_to'];
+    delete adaptedTask['is_favorite'];
+
+    return adaptedTask;
   }
 }

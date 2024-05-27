@@ -1,25 +1,22 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
-import TripEditView from '../view/trip-edit-view.js';
+import TripCreateView from '../view/trip-create-view.js';
 import { EVENT_TYPES, UserAction, UpdateType} from '../const.js';
 import { randomeId } from '../utils/task.js';
 
 export default class NewPointPresenter {
   #offers = null;
   #destinations = null;
-  #pointsConatainer = null;
   #pointListContainer = null;
   #emptyMessageRender = null;
   #handleDataChange = null;
   #handleDestroy = null;
-  // #defaultPoint = randomeId();
   #eventTypes = EVENT_TYPES;
 
   #newPointComponent = null;
 
-  constructor({offers, destinations, pointsContainer, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
+  constructor({offers, destinations, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#pointsConatainer = pointsContainer;
     this.#pointListContainer = pointListContainer;
     this.#emptyMessageRender = emptyMessageRender;
     this.#handleDataChange = onDataChange;
@@ -31,7 +28,7 @@ export default class NewPointPresenter {
       return;
     }
 
-    this.#newPointComponent = new TripEditView({
+    this.#newPointComponent = new TripCreateView({
       offers: this.#offers,
       destinations: this.#destinations,
       point: randomeId(),
@@ -41,8 +38,6 @@ export default class NewPointPresenter {
     });
 
     render(this.#newPointComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);
-
-    render(this.#pointListContainer, this.#pointsConatainer);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }

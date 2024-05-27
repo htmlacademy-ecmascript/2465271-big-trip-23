@@ -34,7 +34,6 @@ export default class MainPagePresenter {
     this.#newPointPresenter = new NewPointPresenter({
       offers: this.#offersModel.offers,
       destinations: this.#destinationsModel.destinations,
-      pointsContainer: this.#pointsContainer,
       pointListContainer: this.#pointsListComponent,
       emptyMessageRender: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
@@ -69,6 +68,7 @@ export default class MainPagePresenter {
     if (this.#emptyMessageComponent !== null) {
       remove(this.#emptyMessageComponent);
       this.#emptyMessageComponent = null;
+      render(this.#pointsListComponent, this.#pointsContainer);
     }
   }
 
