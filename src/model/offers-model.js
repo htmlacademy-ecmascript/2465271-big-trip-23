@@ -1,5 +1,4 @@
 import Observable from '../framework/observable';
-// import { offersData } from '../mock/mock-offers';
 
 export default class OffersModel extends Observable {
   #offers = [];
@@ -18,10 +17,6 @@ export default class OffersModel extends Observable {
       this.#offers = [];
     }
   }
-
-  // init() {
-  //   this.#offers = offersData;
-  // }
 
   get offers() {
     return this.#offers;
