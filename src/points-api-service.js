@@ -3,6 +3,8 @@ import ApiService from './framework/api-service.js';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 export default class PointsApiService extends ApiService {
@@ -84,7 +86,7 @@ export default class PointsApiService extends ApiService {
 
   #adaptToServer(point) {
     const adaptedTask = {...point,
-      'base_price': point.basePrice,
+      'base_price': Number(point.basePrice),
       'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
       'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null,
       'is_favorite': point.isFavorite,

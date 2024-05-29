@@ -5,9 +5,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
-  // console.log(offers);
-  // console.log(destinations);
-  // console.log(point);
   const {basePrice, dateFrom, dateTo, type} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const selectedOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
@@ -263,7 +260,7 @@ export default class TripCreateView extends AbstractStatefulView {
     const currentPrice = this.#point.basePrice;
     if (!isNaN(evt.target.value)) {
       this._setState({
-        basePrice: he.encode(evt.target.value),
+        basePrice: evt.target.value,
       });
     } if(!this._state.basePrice) {
       this._setState({

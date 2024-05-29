@@ -11,8 +11,6 @@ import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../c
 export default class MainPagePresenter {
   #pointsContainer = null;
   #pointsModel = null;
-  // #offersModel = null;
-  // #destinationsModel = null;
   #filterModel = null;
 
   #sortComponent = null;
@@ -30,13 +28,10 @@ export default class MainPagePresenter {
   constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
-    // this.#offersModel = offersModel;
-    // this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
 
     this.#newPointPresenter = new NewPointPresenter({
-      offers: this.#pointsModel.offers,
-      destinations: this.#pointsModel.destinations,
+      pointsModel: this.#pointsModel,
       pointListContainer: this.#pointsListComponent,
       emptyMessageRender: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
@@ -156,8 +151,6 @@ export default class MainPagePresenter {
   }
 
   #renderPoint (point) {
-    // console.log(this.#offersModel.offers);
-    // console.log(this.#destinationsModel.destinations);
     const pointPresenter = new PointPresenter({
       pointContainer: this.#pointsListComponent,
       onDataChange: this.#handleViewAction,
