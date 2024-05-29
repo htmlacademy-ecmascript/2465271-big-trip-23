@@ -11,8 +11,8 @@ import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../c
 export default class MainPagePresenter {
   #pointsContainer = null;
   #pointsModel = null;
-  #offersModel = null;
-  #destinationsModel = null;
+  // #offersModel = null;
+  // #destinationsModel = null;
   #filterModel = null;
 
   #sortComponent = null;
@@ -27,16 +27,16 @@ export default class MainPagePresenter {
   #newPointPresenter = null;
   #isLoading = true;
 
-  constructor({pointsContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy}) {
+  constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
-    this.#offersModel = offersModel;
-    this.#destinationsModel = destinationsModel;
+    // this.#offersModel = offersModel;
+    // this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
 
     this.#newPointPresenter = new NewPointPresenter({
-      offers: this.#offersModel.offers,
-      destinations: this.#destinationsModel.destinations,
+      offers: this.#pointsModel.offers,
+      destinations: this.#pointsModel.destinations,
       pointListContainer: this.#pointsListComponent,
       emptyMessageRender: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
@@ -164,8 +164,8 @@ export default class MainPagePresenter {
       onModeChange: this.#handleModeChange,
     });
     pointPresenter.init(
-      this.#offersModel.offers,
-      this.#destinationsModel.destinations,
+      this.#pointsModel.offers,
+      this.#pointsModel.destinations,
       point,
       EVENT_TYPES,
     );
@@ -173,7 +173,7 @@ export default class MainPagePresenter {
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#pointsListComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#loadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #clearPoints({resetSortType = false} = {}) {

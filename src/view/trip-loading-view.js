@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
 
 const createNoPointTemplate = () =>
-  `<p class="board__no-tasks">
+  `<p class="trip-events__msg">
     Loading...
   </p>`;
 

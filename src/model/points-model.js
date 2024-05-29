@@ -5,6 +5,8 @@ import { defaultEventPoint } from '../const';
 export default class PointsModel extends Observable {
 
   #points = [];
+  #offers = [];
+  #destinations = [];
   #defaultPoint = [];
   #pointsApiService = null;
 
@@ -17,8 +19,14 @@ export default class PointsModel extends Observable {
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
+      const offers = await this.#pointsApiService.offers;
+      this.#offers = offers;
+      const destinations = await this.#pointsApiService.destinations;
+      this.#destinations = destinations;
     } catch(err) {
       this.#points = [];
+      this.#offers = [];
+      this.#destinations = [];
     }
     this._notify(UpdateType.INIT);
     this.#defaultPoint = defaultEventPoint;
@@ -32,13 +40,18 @@ export default class PointsModel extends Observable {
     this.#points = points;
   }
 
+  get offers() {
+    return this.#offers;
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
+
   get defaultPoint() {
     return this.#defaultPoint;
   }
 
-  set defaultPoint(defaultPoint) {
-    this.#defaultPoint = defaultPoint;
-  }
 
   async updatePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
@@ -76,7 +89,7 @@ export default class PointsModel extends Observable {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+      throw new Error('Can\'t delete unexisting point');
     }
 
     try {
