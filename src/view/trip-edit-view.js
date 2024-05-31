@@ -23,7 +23,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
     </div>`;
 
   const createOffersContainer = () =>
-    `<section class="event__section  c">
+    `<section class="event__section">
       <h3 class="event__section-title  event__section-title--offers">Offer</h3>
       <div class="event__available-offers">
       ${typeOffers.map((offer) => selectedOffers.find((elem) => elem.id === offer.id) ? createOffersData(offer.title, offer.price, offer.id, 'checked') : createOffersData(offer.title, offer.price, offer.id, '')).join('')}

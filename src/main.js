@@ -45,6 +45,4 @@ function handleNewPointButtonClick() {
 
 filterPagePresenter.init();
 mainPagePresenter.init();
-pointsModel.init().finally(() => {
-  newPointButtonComponent.element.disabled = false;
-});
+pointsModel.init();
