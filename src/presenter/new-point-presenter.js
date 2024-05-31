@@ -1,11 +1,9 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import TripCreateView from '../view/trip-create-view.js';
-import { EVENT_TYPES, UserAction, UpdateType} from '../const.js';
-import { randomeId } from '../utils/task.js';
+import { EVENT_TYPES, UserAction, UpdateType } from '../const.js';
 
 export default class NewPointPresenter {
-  #offers = null;
-  #destinations = null;
+  #pointsModel = null;
   #pointListContainer = null;
   #emptyMessageRender = null;
   #handleDataChange = null;
@@ -14,9 +12,8 @@ export default class NewPointPresenter {
 
   #newPointComponent = null;
 
-  constructor({offers, destinations, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
-    this.#offers = offers;
-    this.#destinations = destinations;
+  constructor({pointsModel, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
+    this.#pointsModel = pointsModel;
     this.#pointListContainer = pointListContainer;
     this.#emptyMessageRender = emptyMessageRender;
     this.#handleDataChange = onDataChange;
@@ -29,9 +26,9 @@ export default class NewPointPresenter {
     }
 
     this.#newPointComponent = new TripCreateView({
-      offers: this.#offers,
-      destinations: this.#destinations,
-      point: randomeId(),
+      offers: this.#pointsModel.offers,
+      destinations: this.#pointsModel.destinations,
+      point: this.#pointsModel.defaultPoint,
       eventTypes: this.#eventTypes,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteButtonClick: this.#handleDeleteClick,
@@ -63,7 +60,7 @@ export default class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      { ...point},
+      point,
     );
     this.destroy();
   };

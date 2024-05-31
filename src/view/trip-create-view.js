@@ -153,7 +153,7 @@ export default class TripCreateView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormDelete);
-    this.element.addEventListener('change', this.#onOffersChange);
+    this.element.querySelector('.event__section').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
@@ -240,14 +240,17 @@ export default class TripCreateView extends AbstractStatefulView {
 
   #onOffersChange = (evt) => {
     evt.preventDefault();
-    const currentOffer = Number(evt.target.id.replace(/\D/g, ''));
     const setOffers = (state) => {
-      if(state.includes(currentOffer)) {
+      const currentOffers = this.#offers.find((elem) => elem.type === this._state.type).offers;
+      const currentOffersId = currentOffers.map((elem) => elem.id);
+      const currentOffer = evt.target.getAttribute('name').slice(-36);
+      if(!state.includes(currentOffer)) {
+        const pushState = [...currentOffersId].filter((elem) => elem === currentOffer).join(' ');
+        state.push(pushState);
+        return state;
+      } else {
         const cutState = state.filter((elem) => elem !== currentOffer);
         return cutState;
-      } else {
-        state.push(currentOffer);
-        return state;
       }
     };
     this._setState({
@@ -260,7 +263,7 @@ export default class TripCreateView extends AbstractStatefulView {
     const currentPrice = this.#point.basePrice;
     if (!isNaN(evt.target.value)) {
       this._setState({
-        basePrice: he.encode(evt.target.value),
+        basePrice: evt.target.value,
       });
     } if(!this._state.basePrice) {
       this._setState({

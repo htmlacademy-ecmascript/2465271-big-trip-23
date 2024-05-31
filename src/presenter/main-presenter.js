@@ -1,39 +1,39 @@
 import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
+import LoadingView from '../view/trip-loading-view';
 import NewPointPresenter from './new-point-presenter';
 import PointPresenter from './point-presenter';
-import { render, remove } from '../framework/render';
+import { render, remove, RenderPosition } from '../framework/render';
 import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay, filter } from '../utils/task';
 import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../const';
 
 export default class MainPagePresenter {
   #pointsContainer = null;
   #pointsModel = null;
-  #offersModel = null;
-  #destinationsModel = null;
   #filterModel = null;
 
   #sortComponent = null;
   #pointsListComponent = new TripListView();
   #emptyMessageComponent = null;
+  #newPointButtonComponent = null;
+  #loadingComponent = new LoadingView();
 
   #currentSortType = SortTypes.DAY;
   #filterType = FilterType.EVERYTHING;
 
   #pointPresenter = new Map();
   #newPointPresenter = null;
+  #isLoading = true;
 
-  constructor({pointsContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy}) {
+  constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy, newPointButtonComponent}) {
     this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
-    this.#offersModel = offersModel;
-    this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
+    this.#newPointButtonComponent = newPointButtonComponent;
 
     this.#newPointPresenter = new NewPointPresenter({
-      offers: this.#offersModel.offers,
-      destinations: this.#destinationsModel.destinations,
+      pointsModel: this.#pointsModel,
       pointListContainer: this.#pointsListComponent,
       emptyMessageRender: this.#renderEmptyViewMessage,
       onDataChange: this.#handleViewAction,
@@ -104,6 +104,12 @@ export default class MainPagePresenter {
         this.#clearPoints({resetSortType: true});
         this.#renderPoints(this.points);
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderPoints(this.points);
+        this.#newPointButtonComponent.element.disabled = false;
+        break;
     }
   };
 
@@ -132,6 +138,12 @@ export default class MainPagePresenter {
   }
 
   #renderPoints(points) {
+    if (this.#isLoading) {
+      this.#newPointButtonComponent.element.disabled = true;
+      render(this.#pointsListComponent, this.#pointsContainer);
+      this.#renderLoading();
+      return;
+    }
     if (isEmpty(points)) {
       remove(this.#pointsListComponent);
       this.#renderEmptyViewMessage();
@@ -149,12 +161,16 @@ export default class MainPagePresenter {
       onModeChange: this.#handleModeChange,
     });
     pointPresenter.init(
-      this.#offersModel.offers,
-      this.#destinationsModel.destinations,
+      this.#pointsModel.offers,
+      this.#pointsModel.destinations,
       point,
       EVENT_TYPES,
     );
     this.#pointPresenter.set(point.id, pointPresenter);
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #clearPoints({resetSortType = false} = {}) {
@@ -164,6 +180,7 @@ export default class MainPagePresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if(this.#pointsListComponent) {
       remove(this.#pointsListComponent);
