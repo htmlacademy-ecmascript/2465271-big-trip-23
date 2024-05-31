@@ -108,6 +108,7 @@ export default class MainPagePresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderPoints(this.points);
+        this.#newPointButtonComponent.element.disabled = false;
         break;
     }
   };
@@ -166,7 +167,6 @@ export default class MainPagePresenter {
       EVENT_TYPES,
     );
     this.#pointPresenter.set(point.id, pointPresenter);
-    this.#newPointButtonComponent.element.disabled = false;
   }
 
   #renderLoading() {
