@@ -23,7 +23,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
     </div>`;
 
   const createOffersContainer = () =>
-    `<section class="event__section  event__section--offers">
+    `<section class="event__section">
       <h3 class="event__section-title  event__section-title--offers">Offer</h3>
       <div class="event__available-offers">
       ${typeOffers.map((offer) => selectedOffers.find((elem) => elem.id === offer.id) ? createOffersData(offer.title, offer.price, offer.id, 'checked') : createOffersData(offer.title, offer.price, offer.id, '')).join('')}
@@ -165,7 +165,7 @@ export default class TripEditView extends AbstractStatefulView {
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onFormCancel);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onFormDelete);
-    this.element.addEventListener('change', this.#onOffersChange);
+    this.element.querySelector('.event__section').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
@@ -257,14 +257,17 @@ export default class TripEditView extends AbstractStatefulView {
 
   #onOffersChange = (evt) => {
     evt.preventDefault();
-    const currentOffer = evt.target.id.replace(/\D/g, '');
     const setOffers = (state) => {
-      if(state.includes(currentOffer)) {
+      const currentOffers = this.#offers.find((elem) => elem.type === this._state.type).offers;
+      const currentOffersId = currentOffers.map((elem) => elem.id);
+      const currentOffer = evt.target.getAttribute('name').slice(-36);
+      if(!state.includes(currentOffer)) {
+        const pushState = [...currentOffersId].filter((elem) => elem === currentOffer).join(' ');
+        state.push(pushState);
+        return state;
+      } else {
         const cutState = state.filter((elem) => elem !== currentOffer);
         return cutState;
-      } else {
-        state.push(currentOffer);
-        return state;
       }
     };
     this._setState({
