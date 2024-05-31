@@ -108,7 +108,6 @@ export default class MainPagePresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderPoints(this.points);
-        this.#newPointButtonComponent.element.disabled = false;
         break;
     }
   };
