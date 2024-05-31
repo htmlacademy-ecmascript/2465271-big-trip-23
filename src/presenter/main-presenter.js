@@ -16,6 +16,7 @@ export default class MainPagePresenter {
   #sortComponent = null;
   #pointsListComponent = new TripListView();
   #emptyMessageComponent = null;
+  #newPointButtonComponent = null;
   #loadingComponent = new LoadingView();
 
   #currentSortType = SortTypes.DAY;
@@ -25,10 +26,11 @@ export default class MainPagePresenter {
   #newPointPresenter = null;
   #isLoading = true;
 
-  constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy}) {
+  constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy, newPointButtonComponent}) {
     this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#newPointButtonComponent = newPointButtonComponent;
 
     this.#newPointPresenter = new NewPointPresenter({
       pointsModel: this.#pointsModel,
@@ -136,6 +138,7 @@ export default class MainPagePresenter {
 
   #renderPoints(points) {
     if (this.#isLoading) {
+      this.#newPointButtonComponent.element.disabled = true;
       render(this.#pointsListComponent, this.#pointsContainer);
       this.#renderLoading();
       return;
@@ -163,6 +166,7 @@ export default class MainPagePresenter {
       EVENT_TYPES,
     );
     this.#pointPresenter.set(point.id, pointPresenter);
+    this.#newPointButtonComponent.element.disabled = false;
   }
 
   #renderLoading() {

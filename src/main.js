@@ -15,12 +15,6 @@ const pointsModel = new PointsModel({
 });
 const filterModel = new FilterModel();
 
-const mainPagePresenter = new MainPagePresenter({
-  pointsContainer: pageMainTripEventElement,
-  pointsModel,
-  filterModel,
-  onNewPointDestroy: handleNewPointFormClose,
-});
 
 const filterPagePresenter = new FilterPagePresenter({
   filterContainer: pageTripFiltersElement,
@@ -30,6 +24,14 @@ const filterPagePresenter = new FilterPagePresenter({
 
 const newPointButtonComponent = new TripNewView({
   onClick: handleNewPointButtonClick
+});
+
+const mainPagePresenter = new MainPagePresenter({
+  pointsContainer: pageMainTripEventElement,
+  pointsModel,
+  filterModel,
+  onNewPointDestroy: handleNewPointFormClose,
+  newPointButtonComponent: newPointButtonComponent,
 });
 
 function handleNewPointFormClose() {
