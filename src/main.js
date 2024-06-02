@@ -9,12 +9,15 @@ const AUTHORIZATION = 'Basic dewopSHLoPs2024';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const pageTripFiltersElement = document.querySelector('.trip-controls__filters');
+
 const pageMainTripEventElement = document.querySelector('.trip-events');
-const pointsModel = new PointsModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
-});
+
+
 const filterModel = new FilterModel();
 
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
 
 const filterPagePresenter = new FilterPagePresenter({
   filterContainer: pageTripFiltersElement,

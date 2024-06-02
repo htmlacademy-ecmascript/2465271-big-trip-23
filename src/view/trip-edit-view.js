@@ -5,7 +5,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => {
-  const {basePrice, dateFrom, dateTo, type} = point;
+  const {basePrice, dateFrom, dateTo, type, isDisabled, isSaving, isDeleting} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const selectedOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
   const destinationPoint = destinations.find((elem) => elem.id === point.destination) || {};
@@ -14,7 +14,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
 
   const createOffersData = (title, price, id, state) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}-${id}" ${state}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}-${id}" ${state} ${isDisabled ? 'disabled' : ''}>
       <label class="event__offer-label" for="event-offer-${type}-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
@@ -23,7 +23,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
     </div>`;
 
   const createOffersContainer = () =>
-    `<section class="event__section">
+    `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offer</h3>
       <div class="event__available-offers">
       ${typeOffers.map((offer) => selectedOffers.find((elem) => elem.id === offer.id) ? createOffersData(offer.title, offer.price, offer.id, 'checked') : createOffersData(offer.title, offer.price, offer.id, '')).join('')}
@@ -48,7 +48,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
 
   const createEventTypeList = (lowerCaseType, upperCaseType, state) =>
     `<div class="event__type-item">
-      <input id="event-type-${lowerCaseType}-${eventId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}" ${state}>
+      <input id="event-type-${lowerCaseType}-${eventId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}" ${state} ${isDisabled ? 'disabled' : ''}>
       <label class="event__type-label  event__type-label--${lowerCaseType}" for="event-type-${lowerCaseType}-${eventId}">${upperCaseType}</label>
     </div>`;
 
@@ -61,7 +61,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventId}" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventId}" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -75,7 +75,7 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
             <label class="event__label  event__type-output" for="event-destination-${eventId}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}">
+            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}" ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-${eventId}">
               ${destinations.map((elem) => createEventDestinationList(elem.name))}
             </datalist>
@@ -83,10 +83,10 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${eventId}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${eventId}" type="text" name="event-start-time" value="${displayEditTime(dateFrom)}">
+            <input class="event__input  event__input--time" id="event-start-time-${eventId}" type="text" name="event-start-time" value="${displayEditTime(dateFrom)}" ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-${eventId}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${eventId}" type="text" name="event-end-time" value="${displayEditTime(dateTo)}">
+            <input class="event__input  event__input--time" id="event-end-time-${eventId}" type="text" name="event-end-time" value="${displayEditTime(dateTo)}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -94,12 +94,12 @@ const createTripEditFormTemplate = (offers, destinations, point, eventTypes) => 
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" ${isDisabled ? 'disabled' : ''} name="event-price" value="${basePrice}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
+          <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
@@ -128,7 +128,7 @@ export default class TripEditView extends AbstractStatefulView {
 
   constructor({offers, destinations, point, eventTypes, onFormSubmit, onDeleteButtonClick, onCloseButtonClick}) {
     super();
-    this._setState(point);
+    this._setState(TripEditView.parsePointToState(point));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
@@ -145,7 +145,7 @@ export default class TripEditView extends AbstractStatefulView {
 
   reset(point) {
     this.updateElement(
-      point
+      TripEditView.parsePointToState(point),
     );
   }
 
@@ -242,7 +242,7 @@ export default class TripEditView extends AbstractStatefulView {
     if(!this._state) {
       return;
     }
-    this.#handleSubmit(this._state);
+    this.#handleSubmit(TripEditView.parseStateToPoint(this._state));
   };
 
   #onFormCancel = (evt) => {
@@ -252,7 +252,7 @@ export default class TripEditView extends AbstractStatefulView {
 
   #onFormDelete = (evt) => {
     evt.preventDefault();
-    this.#handleDelete(this._state);
+    this.#handleDelete(TripEditView.parseStateToPoint(this._state));
   };
 
   #onOffersChange = (evt) => {
@@ -288,4 +288,21 @@ export default class TripEditView extends AbstractStatefulView {
       });
     }
   };
+
+  static parsePointToState(point) {
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  }
 }

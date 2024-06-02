@@ -19,14 +19,19 @@ export default class PointsModel extends Observable {
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
+
       const offers = await this.#pointsApiService.offers;
       this.#offers = offers;
+
       const destinations = await this.#pointsApiService.destinations;
       this.#destinations = destinations;
+
     } catch(err) {
       this.#points = [];
       this.#offers = [];
       this.#destinations = [];
+      this._notify(UpdateType.ERROR);
+      throw new Error('Информация о маршруте недоступна. Попробуйте еще раз');
     }
     this._notify(UpdateType.INIT);
     this.#defaultPoint = defaultEventPoint;
