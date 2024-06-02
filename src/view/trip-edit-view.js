@@ -260,7 +260,8 @@ export default class TripEditView extends AbstractStatefulView {
     const setOffers = (state) => {
       const currentOffers = this.#offers.find((elem) => elem.type === this._state.type).offers;
       const currentOffersId = currentOffers.map((elem) => elem.id);
-      const currentOffer = evt.target.getAttribute('name').slice(-36);
+      const preset = `event-offer-${this._state.type}-`;
+      const currentOffer = evt.target.getAttribute('name').replace(preset, '');
       if(!state.includes(currentOffer)) {
         const pushState = [...currentOffersId].filter((elem) => elem === currentOffer).join(' ');
         state.push(pushState);
