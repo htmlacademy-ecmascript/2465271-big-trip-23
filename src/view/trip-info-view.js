@@ -4,8 +4,6 @@ import { sortDefaultByDay, displayInfoDate } from '../utils/task';
 const createTripInfoTemplate = (pointsModel) => {
   const {points, offers, destinations} = pointsModel;
 
-  console.log(pointsModel);
-
   const startTripDate = displayInfoDate(sortDefaultByDay(points).at(0).dateFrom);
 
   const finishTripDate = displayInfoDate(sortDefaultByDay(points).at(-1).dateTo);
