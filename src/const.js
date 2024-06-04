@@ -1,4 +1,5 @@
 const POINT_DATE_FORMAT = 'MMM D';
+const INFO_DATE_FORMAT = 'D MMM';
 const POINT_TIME_FORMAT = 'HH:mm';
 const EDIT_TIME_FORMAT = 'DD/MM/YY HH:mm';
 
@@ -67,6 +68,7 @@ export {
   EVENT_TYPES,
   EmptyMessageTextType,
   POINT_DATE_FORMAT,
+  INFO_DATE_FORMAT,
   POINT_TIME_FORMAT,
   EDIT_TIME_FORMAT,
   SORT_TYPES,
