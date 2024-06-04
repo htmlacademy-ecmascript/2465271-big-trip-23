@@ -5,7 +5,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
-  const {basePrice, dateFrom, dateTo, type} = point;
+  const {basePrice, dateFrom, dateTo, type, isDisabled, isSaving} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const selectedOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
   const destinationPoint = destinations.find((elem) => elem.id === point.destination) || {};
@@ -14,7 +14,7 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
 
   const createOffersData = (title, price, id, state) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}-${id}" ${state}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}-${id}" ${state} ${isDisabled ? 'disabled' : ''}>
       <label class="event__offer-label" for="event-offer-${type}-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
@@ -48,8 +48,8 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
 
   const createEventTypeList = (lowerCaseType, upperCaseType, state) =>
     `<div class="event__type-item">
-      <input id="event-type-${lowerCaseType}-${eventId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}" ${state}>
-      <label class="event__type-label  event__type-label--${lowerCaseType}" for="event-type-${lowerCaseType}-${eventId}">${upperCaseType}</label>
+      <input id="event-type-${lowerCaseType}-${eventId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}" ${state} ${isDisabled ? 'disabled' : ''}>
+      <label class="event__type-label  event__type-label--${lowerCaseType}" for="event-type-${lowerCaseType}-${eventId}" ${isDisabled ? 'disabled' : ''}>${upperCaseType}</label>
     </div>`;
 
   return (
@@ -57,43 +57,43 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-${eventId}">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${eventId}" ${isDisabled ? 'disabled' : ''}>
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventId}" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventId}" type="checkbox" ${isDisabled ? 'disabled' : ''}>
             <div class="event__type-list">
-              <fieldset class="event__type-group">
+              <fieldset class="event__type-group" ${isDisabled ? 'disabled' : ''}>
                 <legend class="visually-hidden">Event type</legend>
                 ${eventTypes.map((elem) => elem === type ? createEventTypeList(elem, getFirstWordCapitalize(elem), 'checked') : createEventTypeList(elem, getFirstWordCapitalize(elem))).join('')}
               </fieldset>
             </div>
           </div>
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-${eventId}">
+            <label class="event__label  event__type-output" for="event-destination-${eventId}" ${isDisabled ? 'disabled' : ''}>
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}">
+            <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${eventId}" ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-${eventId}">
               ${destinations.map((elem) => createEventDestinationList(elem.name))}
             </datalist>
           </div>
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-${eventId}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${eventId}" type="text" name="event-start-time" value="${displayEditTime(dateFrom)}">
+            <label class="visually-hidden" for="event-start-time-${eventId}" ${isDisabled ? 'disabled' : ''}>From</label>
+            <input class="event__input  event__input--time" id="event-start-time-${eventId}" type="text" name="event-start-time" value="${displayEditTime(dateFrom)}" ${isDisabled ? 'disabled' : ''}>
             &mdash;
-            <label class="visually-hidden" for="event-end-time-${eventId}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${eventId}" type="text" name="event-end-time" value="${displayEditTime(dateTo)}">
+            <label class="visually-hidden" for="event-end-time-${eventId}" ${isDisabled ? 'disabled' : ''}>To</label>
+            <input class="event__input  event__input--time" id="event-end-time-${eventId}" type="text" name="event-end-time" value="${displayEditTime(dateTo)}" ${isDisabled ? 'disabled' : ''}>
           </div>
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-${eventId}">
+            <label class="event__label" for="event-price-${eventId}" ${isDisabled ? 'disabled' : ''}>
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}>
           </div>
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>Cancel</button>
         </header>
     ${typeOffers.length !== 0 || description || pictures.length !== 0 ?
       `<section class="event__details">
@@ -117,7 +117,7 @@ export default class TripCreateView extends AbstractStatefulView {
 
   constructor({offers, destinations, point, eventTypes, onFormSubmit, onDeleteButtonClick}) {
     super();
-    this._setState(point);
+    this._setState(TripCreateView.parsePointToState(point));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#point = point;
@@ -134,7 +134,7 @@ export default class TripCreateView extends AbstractStatefulView {
 
   reset(point) {
     this.updateElement(
-      point
+      TripCreateView.parsePointToState(point),
     );
   }
 
@@ -230,12 +230,12 @@ export default class TripCreateView extends AbstractStatefulView {
     if(!this._state) {
       return;
     }
-    this.#handleSubmit(this._state);
+    this.#handleSubmit(TripCreateView.parseStateToPoint(this._state));
   };
 
   #onFormDelete = (evt) => {
     evt.preventDefault();
-    this.#handleDelete(this._state);
+    this.#handleDelete(TripCreateView.parseStateToPoint(this._state));
   };
 
   #onOffersChange = (evt) => {
@@ -243,7 +243,8 @@ export default class TripCreateView extends AbstractStatefulView {
     const setOffers = (state) => {
       const currentOffers = this.#offers.find((elem) => elem.type === this._state.type).offers;
       const currentOffersId = currentOffers.map((elem) => elem.id);
-      const currentOffer = evt.target.getAttribute('name').slice(-36);
+      const preset = `event-offer-${this._state.type}-`;
+      const currentOffer = evt.target.getAttribute('name').replace(preset, '');
       if(!state.includes(currentOffer)) {
         const pushState = [...currentOffersId].filter((elem) => elem === currentOffer).join(' ');
         state.push(pushState);
@@ -271,4 +272,21 @@ export default class TripCreateView extends AbstractStatefulView {
       });
     }
   };
+
+  static parsePointToState(point) {
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  }
 }

@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { TimeType, FilterType, defaultEventPoint, POINT_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { TimeType, FilterType, defaultEventPoint, POINT_DATE_FORMAT, INFO_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
 import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
 
 const displayEventTime = (time) => time ? dayjs(time).format(POINT_TIME_FORMAT) : '';
+
+const displayInfoDate = (date) => date ? dayjs(date).format(INFO_DATE_FORMAT) : '';
 
 const displayEventDate = (date) => date ? dayjs(date).format(POINT_DATE_FORMAT) : '';
 
@@ -65,6 +67,7 @@ const filter = {
 export {
   getRandomDescriptionPhoto,
   displayEventTime,
+  displayInfoDate,
   displayEventDate,
   displayEditTime,
   getFirstWordCapitalize,

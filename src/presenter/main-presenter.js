@@ -2,11 +2,18 @@ import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import LoadingView from '../view/trip-loading-view';
+import FailedLoadingView from '../view/trip-failed-loading-view';
 import NewPointPresenter from './new-point-presenter';
 import PointPresenter from './point-presenter';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import { render, remove, RenderPosition } from '../framework/render';
 import { isEmpty, sortByPrice, sortByTime, sortDefaultByDay, filter } from '../utils/task';
 import { SortTypes, FilterType, EVENT_TYPES, UpdateType, UserAction } from '../const';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class MainPagePresenter {
   #pointsContainer = null;
@@ -18,9 +25,14 @@ export default class MainPagePresenter {
   #emptyMessageComponent = null;
   #newPointButtonComponent = null;
   #loadingComponent = new LoadingView();
+  #failedLoadingComponent = new FailedLoadingView();
 
   #currentSortType = SortTypes.DAY;
   #filterType = FilterType.EVERYTHING;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT,
+  });
 
   #pointPresenter = new Map();
   #newPointPresenter = null;
@@ -61,6 +73,10 @@ export default class MainPagePresenter {
     this.#renderPoints(this.points);
   }
 
+  failedMessage() {
+    render(this.#failedLoadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
+  }
+
   createPoint() {
     this.#currentSortType = SortTypes.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
@@ -77,18 +93,35 @@ export default class MainPagePresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setSaving();
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#pointsModel.addPoint(updateType, update);
+        } catch(err) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setDeleting();
+        try {
+          await this.#pointsModel.deletePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -109,6 +142,12 @@ export default class MainPagePresenter {
         remove(this.#loadingComponent);
         this.#renderPoints(this.points);
         this.#newPointButtonComponent.element.disabled = false;
+        break;
+      case UpdateType.ERROR:
+        remove(this.#loadingComponent);
+        this.#newPointButtonComponent.element.disabled = true;
+        render(this.#pointsListComponent, this.#pointsContainer);
+        this.#renderErrorMessage();
         break;
     }
   };
@@ -171,6 +210,10 @@ export default class MainPagePresenter {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderErrorMessage() {
+    render(this.#failedLoadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #clearPoints({resetSortType = false} = {}) {
