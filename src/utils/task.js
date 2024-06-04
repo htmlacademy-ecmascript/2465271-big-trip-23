@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
-import { TimeType, FilterType, defaultEventPoint, POINT_DATE_FORMAT, INFO_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { TimeType, FilterType, POINT_DATE_FORMAT, INFO_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
 import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
@@ -50,13 +49,6 @@ const filterTripByFuture = (tripPoints) => tripPoints.filter((trip) => new Date 
 
 const isEmpty = (data) => data.length === 0;
 
-function randomeId () {
-  return {
-    id: nanoid(),
-    ...defaultEventPoint
-  };
-}
-
 const filter = {
   [FilterType.EVERYTHING]: (tripPoints) => filterTripByEverything(tripPoints),
   [FilterType.PAST]: (tripPoints) => filterTripByPast(tripPoints),
@@ -81,5 +73,4 @@ export {
   filterTripByFuture,
   isEmpty,
   filter,
-  randomeId
 };
