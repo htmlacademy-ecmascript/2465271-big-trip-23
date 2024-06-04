@@ -3,9 +3,32 @@ import { sortDefaultByDay, displayInfoDate } from '../utils/task';
 
 const createTripInfoTemplate = (pointsModel) => {
   const {points, offers, destinations} = pointsModel;
+
   const startTripDate = displayInfoDate(sortDefaultByDay(points).at(0).dateFrom);
+
   const finishTripDate = displayInfoDate(sortDefaultByDay(points).at(-1).dateTo);
-  const tripDestinationId = sortDefaultByDay(points).map((destination) => destination.destination);
+
+  const baseTotalPrise = points.reduce((acc, price) => acc + price.basePrice, 0);
+
+  const offersArray = offers.map((elem) => elem.offers).flat();
+
+  const offersPriceId = points.map((elem) => elem.offers).flat();
+
+  const offersPrice = () => {
+    const priceList = [];
+    for(let i = 0; i < offersPriceId.length; i++) {
+      for(let j = 0; j < offersArray.length; j++) {
+        if(offersPriceId[i] === offersArray[j].id) {
+          priceList.push(offersArray[j].price);
+        }
+      }
+    } return priceList.reduce((acc, elem) => acc + elem);
+  };
+
+  const totalPrice = offersPrice() + baseTotalPrise;
+
+  const tripDestinationId = sortDefaultByDay(points).map((elem) => elem.destination);
+
   const createTripDestinationList = () => {
     const destinationList = [];
     for(let i = 0; i < tripDestinationId.length; i++) {
@@ -25,8 +48,6 @@ const createTripInfoTemplate = (pointsModel) => {
     }
   };
 
-  console.log(viewTripDestination());
-
   return (
     `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
@@ -36,7 +57,7 @@ const createTripInfoTemplate = (pointsModel) => {
     </div>
 
     <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
     </p>
   </section>`);
 };
