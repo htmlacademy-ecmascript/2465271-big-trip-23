@@ -8,13 +8,21 @@ const createTripInfoTemplate = (pointsModel) => {
 
   const finishTripDate = displayInfoDate(sortDefaultByDay(points).at(-1).dateTo);
 
+  const viewTotalTripDate = () => {
+    if(startTripDate.replace(/\d/g, '') === finishTripDate.replace(/\d/g, '')) {
+      return `${startTripDate.replace(/\D+/g, '')} - ${finishTripDate}`;
+    } else {
+      return `${startTripDate} - ${finishTripDate}`;
+    }
+  };
+
   const baseTotalPrise = points.reduce((acc, price) => acc + price.basePrice, 0);
 
   const offersArray = offers.map((elem) => elem.offers).flat();
 
   const offersPriceId = points.map((elem) => elem.offers).flat();
 
-  const offersPrice = () => {
+  const createOffersPrice = () => {
     const priceList = [];
     for(let i = 0; i < offersPriceId.length; i++) {
       for(let j = 0; j < offersArray.length; j++) {
@@ -25,7 +33,7 @@ const createTripInfoTemplate = (pointsModel) => {
     } return priceList.reduce((acc, elem) => acc + elem);
   };
 
-  const totalPrice = offersPrice() + baseTotalPrise;
+  const totalPrice = createOffersPrice() + baseTotalPrise;
 
   const tripDestinationId = sortDefaultByDay(points).map((elem) => elem.destination);
 
@@ -53,7 +61,7 @@ const createTripInfoTemplate = (pointsModel) => {
     <div class="trip-info__main">
       <h1 class="trip-info__title">${viewTripDestination()}</h1>
 
-      <p class="trip-info__dates">${startTripDate}&nbsp;&mdash;&nbsp;${finishTripDate}</p>
+      <p class="trip-info__dates">${viewTotalTripDate()}</p>
     </div>
 
     <p class="trip-info__cost">
