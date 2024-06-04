@@ -13,7 +13,7 @@ export default class TripInfoPresenter {
   }
 
   init() {
-    if(this.#pointsModel === null) {
+    if(this.#pointsModel.points.length === 0) {
       return;
     }
     remove(this.#tripInfoComponent);
