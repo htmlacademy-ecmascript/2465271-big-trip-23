@@ -2,9 +2,6 @@ import { displayEventTime, displayEventDate, getDuration } from '../utils/task';
 import AbstractView from '../framework/view/abstract-view';
 
 const createTripPointTemplate = (offers, destinations, point) => {
-  // console.log(offers);
-  // console.log(destinations);
-  // console.log(point);
   const {dateFrom, dateTo, isFavorite, basePrice, type} = point;
   const typeOffers = offers.find((elem) => elem.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));

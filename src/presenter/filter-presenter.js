@@ -1,5 +1,4 @@
 import TripFilterView from '../view/trip-filter-view';
-// import TripInfoView from '../view/trip-info-view';
 import TripInfoPresenter from './trip-info-presenter';
 import { render, replace, remove } from '../framework/render';
 import { filter } from '../utils/task';
