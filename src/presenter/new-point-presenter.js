@@ -4,18 +4,18 @@ import { EVENT_TYPES, UserAction, UpdateType } from '../const.js';
 
 export default class NewPointPresenter {
   #pointsModel = null;
-  #pointListContainer = null;
-  #emptyMessageRender = null;
+  #pointsListComponent = null;
+  #renderEmptyMessageView = null;
   #handleDataChange = null;
   #handleDestroy = null;
   #eventTypes = EVENT_TYPES;
 
   #newPointComponent = null;
 
-  constructor({pointsModel, pointListContainer, emptyMessageRender, onDataChange, onDestroy}) {
+  constructor({pointsModel, pointsListComponent, renderEmptyMessageView, onDataChange, onDestroy}) {
     this.#pointsModel = pointsModel;
-    this.#pointListContainer = pointListContainer;
-    this.#emptyMessageRender = emptyMessageRender;
+    this.#pointsListComponent = pointsListComponent;
+    this.#renderEmptyMessageView = renderEmptyMessageView;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
@@ -34,7 +34,7 @@ export default class NewPointPresenter {
       onDeleteButtonClick: this.#handleDeleteClick,
     });
 
-    render(this.#newPointComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);
+    render(this.#newPointComponent, this.#pointsListComponent.element, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
@@ -49,9 +49,9 @@ export default class NewPointPresenter {
     remove(this.#newPointComponent);
     this.#newPointComponent = null;
 
-    if(this.#pointListContainer.element.childElementCount === 0) {
-      remove(this.#pointListContainer);
-      this.#emptyMessageRender();
+    if(this.#pointsListComponent.element.childElementCount === 0) {
+      remove(this.#pointsListComponent);
+      this.#renderEmptyMessageView();
     }
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
@@ -81,7 +81,6 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point,
     );
-    // this.destroy();
   };
 
   #handleDeleteClick = () => {

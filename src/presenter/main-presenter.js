@@ -46,8 +46,8 @@ export default class MainPagePresenter {
 
     this.#newPointPresenter = new NewPointPresenter({
       pointsModel: this.#pointsModel,
-      pointListContainer: this.#pointsListComponent,
-      emptyMessageRender: this.#renderEmptyViewMessage,
+      pointsListComponent: this.#pointsListComponent,
+      renderEmptyMessageView: this.#renderEmptyMessageView,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
@@ -71,10 +71,6 @@ export default class MainPagePresenter {
 
   init() {
     this.#renderPoints(this.points);
-  }
-
-  failedMessage() {
-    render(this.#failedLoadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 
   createPoint() {
@@ -145,9 +141,9 @@ export default class MainPagePresenter {
         break;
       case UpdateType.ERROR:
         remove(this.#loadingComponent);
-        this.#newPointButtonComponent.element.disabled = true;
         render(this.#pointsListComponent, this.#pointsContainer);
         this.#renderErrorMessage();
+        this.#newPointButtonComponent.element.disabled = true;
         break;
     }
   };
@@ -161,7 +157,7 @@ export default class MainPagePresenter {
     this.#renderPoints(this.points);
   };
 
-  #renderEmptyViewMessage = () => {
+  #renderEmptyMessageView = () => {
     this.#emptyMessageComponent = new TripListEmptyView({
       filterType: this.#filterType
     });
@@ -180,12 +176,12 @@ export default class MainPagePresenter {
     if (this.#isLoading) {
       this.#newPointButtonComponent.element.disabled = true;
       render(this.#pointsListComponent, this.#pointsContainer);
-      this.#renderLoading();
+      this.#renderLoadingMessage();
       return;
     }
     if (isEmpty(points)) {
       remove(this.#pointsListComponent);
-      this.#renderEmptyViewMessage();
+      this.#renderEmptyMessageView();
       return;
     }
     this.#renderTripSortView(this.points);
@@ -208,7 +204,7 @@ export default class MainPagePresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
-  #renderLoading() {
+  #renderLoadingMessage() {
     render(this.#loadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 

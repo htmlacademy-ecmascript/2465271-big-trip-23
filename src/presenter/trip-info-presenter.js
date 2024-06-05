@@ -14,6 +14,8 @@ export default class TripInfoPresenter {
 
   init() {
     if(this.#pointsModel.points.length === 0) {
+      remove(this.#tripInfoComponent);
+      this.#tripInfoComponent = null;
       return;
     }
     remove(this.#tripInfoComponent);

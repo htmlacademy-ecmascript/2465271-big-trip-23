@@ -5,9 +5,9 @@ const EDIT_TIME_FORMAT = 'DD/MM/YY HH:mm';
 
 const FilterType = {
   EVERYTHING: 'everything',
-  PAST: 'past',
-  PRESENT: 'present',
   FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
 const EmptyMessageTextType = {

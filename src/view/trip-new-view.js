@@ -8,7 +8,7 @@ export default class TripNewView extends AbstractView {
     super();
     this.#handleClick = onClick;
     this.#element = document.querySelector('.trip-main__event-add-btn');
-    this.#element.addEventListener('click', this.#clickHandler);
+    this.#element?.addEventListener('click', this.#clickHandler);
   }
 
   get element() {

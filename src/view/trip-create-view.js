@@ -32,16 +32,16 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
 
   const createPhotosData = (photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
 
-  const createDescriptionContainer = () =>
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${description}</p>
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-        ${pictures.map((photo) => createPhotosData(photo)).join('')}
-        </div>
+  const createPhotosContainer = () =>
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+      ${pictures.map((photo) => createPhotosData(photo)).join('')}
       </div>
-    </section>`;
+    </div>`;
+
+  const createDescriptionContainer = () =>
+    `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${description}</p>`;
 
   const createEventDestinationList = (destination) =>
     `<option value="${destination}"></option>`;
@@ -92,13 +92,17 @@ const createTripFormTemplate = (offers, destinations, point, eventTypes) => {
             </label>
             <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}>
           </div>
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>Cancel</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
     ${typeOffers.length !== 0 || description || pictures.length !== 0 ?
       `<section class="event__details">
         ${typeOffers.length !== 0 ? createOffersContainer() : ''}
-        ${description || pictures.length !== 0 ? createDescriptionContainer() : ''}
+        ${description || pictures.length !== 0 ?
+      `<section class="event__section  event__section--destination">
+        ${description ? createDescriptionContainer() : ''}
+        ${pictures.length !== 0 ? createPhotosContainer() : ''}
+      </section>` : ''}
       </section>` : ''
     }
       </form>
@@ -151,12 +155,12 @@ export default class TripCreateView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.element.addEventListener('submit', this.#onFormSubmit);
-    this.element.querySelector('.event__reset-btn').addEventListener('click',this.#onFormDelete);
-    this.element.querySelector('.event__section').addEventListener('change', this.#onOffersChange);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
-    this.element.querySelector('.event__input--destination').addEventListener('input', this.#changeEventDestinationHandler);
+    this.element?.addEventListener('submit', this.#onFormSubmit);
+    this.element?.querySelector('.event__reset-btn')?.addEventListener('click',this.#onFormDelete);
+    this.element?.querySelector('.event__section')?.addEventListener('change', this.#onOffersChange);
+    this.element?.querySelector('.event__type-group')?.addEventListener('change', this.#changeEventTypeHandler);
+    this.element?.querySelector('.event__input--price')?.addEventListener('input', this.#onPriceInput);
+    this.element?.querySelector('.event__input--destination')?.addEventListener('input', this.#changeEventDestinationHandler);
     this.#setDateFromPicker();
     this.#setDateToPicker();
   }
@@ -185,13 +189,13 @@ export default class TripCreateView extends AbstractStatefulView {
     }
   };
 
-  #dateFromChangeHandler = ([userDate]) => {
+  #handleDateFromChange = ([userDate]) => {
     this.updateElement({
       dateFrom: userDate,
     });
   };
 
-  #dateToChangeHandler = ([userDate]) => {
+  #handleDateToChange = ([userDate]) => {
     this.updateElement({
       dateTo: userDate,
     });
@@ -206,7 +210,7 @@ export default class TripCreateView extends AbstractStatefulView {
         'time_24hr': true,
         maxDate: this._state.dateTo,
         defaulDate: this._state.dateFrom,
-        onClose: this.#dateFromChangeHandler,
+        onClose: this.#handleDateFromChange,
       },
     );
   }
@@ -220,7 +224,7 @@ export default class TripCreateView extends AbstractStatefulView {
         'time_24hr': true,
         minDate: this._state.dateFrom,
         defaulDate: this._state.dateTo,
-        onClose: this.#dateToChangeHandler,
+        onClose: this.#handleDateToChange,
       },
     );
   }
