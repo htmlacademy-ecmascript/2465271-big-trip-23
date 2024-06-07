@@ -25,7 +25,7 @@ export default class MainPagePresenter {
   #emptyMessageComponent = null;
   #newPointButtonComponent = null;
   #loadingComponent = new LoadingView();
-  #failedLoadingComponent = new FailedLoadingView();
+  #failedLoadingComponent = null;
 
   #currentSortType = SortTypes.DAY;
   #filterType = FilterType.EVERYTHING;
@@ -36,6 +36,7 @@ export default class MainPagePresenter {
 
   #pointPresenter = new Map();
   #newPointPresenter = null;
+  #tripInfoPresenter = null;
   #isLoading = true;
 
   constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy, newPointButtonComponent}) {
@@ -209,6 +210,7 @@ export default class MainPagePresenter {
   }
 
   #renderErrorMessage() {
+    this.#failedLoadingComponent = new FailedLoadingView();
     render(this.#failedLoadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 

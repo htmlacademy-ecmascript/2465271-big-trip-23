@@ -14,9 +14,9 @@ const createTripInfoTemplate = (pointsModel) => {
 
   const baseTotalPrise = points.reduce((acc, price) => acc + price.basePrice, 0);
 
-  const offersData = offers.map((elem) => elem.offers).flat();
+  const offersData = offers.map((offer) => offer.offers).flat();
 
-  const offersPriceId = points.map((elem) => elem.offers).flat();
+  const offersPriceId = points.map((point) => point.offers).flat();
 
   const createOffersPrice = () => {
     const priceList = [];
@@ -29,7 +29,7 @@ const createTripInfoTemplate = (pointsModel) => {
     } return priceList;
   };
 
-  const totalOffersPrice = createOffersPrice().reduce((acc, elem) => acc + elem, 0);
+  const totalOffersPrice = createOffersPrice().reduce((acc, price) => acc + price, 0);
 
   const totalPrice = totalOffersPrice + baseTotalPrise;
 

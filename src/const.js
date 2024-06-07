@@ -10,14 +10,14 @@ const FilterType = {
   PAST: 'past',
 };
 
-const EmptyMessageTextType = {
+const emptyMessageTextType = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.FUTURE]: 'There are no future events now',
   [FilterType.PRESENT]: 'There are no present events now',
   [FilterType.PAST]: 'There are no past events now',
 };
 
-const TimeType = {
+const timeType = {
   MINUTES: 60,
   HOURS: 24,
 };
@@ -64,9 +64,9 @@ const UpdateType = {
 
 export {
   FilterType,
-  TimeType,
+  timeType,
   EVENT_TYPES,
-  EmptyMessageTextType,
+  emptyMessageTextType,
   POINT_DATE_FORMAT,
   INFO_DATE_FORMAT,
   POINT_TIME_FORMAT,
@@ -76,5 +76,5 @@ export {
   defaultEventPoint,
   Mode,
   UserAction,
-  UpdateType
+  UpdateType,
 };

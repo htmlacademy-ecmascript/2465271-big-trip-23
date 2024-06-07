@@ -53,7 +53,6 @@ export default class PointsModel extends Observable {
     return this.#defaultPoint;
   }
 
-
   async updatePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
