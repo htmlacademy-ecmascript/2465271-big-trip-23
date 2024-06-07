@@ -42,7 +42,7 @@ export default class TripFilterView extends AbstractView {
     this.#currentFilter = currentFilterType;
     this.#handleFilterTypeChange = onFilterTypeChange;
 
-    this.element.addEventListener('change', this.#filterTypeChangeHandler);
+    this.element?.addEventListener('change', this.#filterTypeChangeHandler);
   }
 
   get template() {

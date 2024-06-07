@@ -2,21 +2,21 @@ import AbstractView from '../framework/view/abstract-view';
 
 export default class TripNewView extends AbstractView {
   #element = null;
-  #handleClick = null;
+  #handleCreateButtonClick = null;
 
   constructor({onClick}) {
     super();
-    this.#handleClick = onClick;
+    this.#handleCreateButtonClick = onClick;
     this.#element = document.querySelector('.trip-main__event-add-btn');
-    this.#element.addEventListener('click', this.#clickHandler);
+    this.#element?.addEventListener('click', this.#handleNewPointClick);
   }
 
   get element() {
     return this.#element;
   }
 
-  #clickHandler = (evt) => {
+  #handleNewPointClick = (evt) => {
     evt.preventDefault();
-    this.#handleClick();
+    this.#handleCreateButtonClick();
   };
 }
