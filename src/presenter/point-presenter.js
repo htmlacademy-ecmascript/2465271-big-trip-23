@@ -115,18 +115,18 @@ export default class PointPresenter {
 
   #replacePointFormToEditForm() {
     replace(this.#editEventComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscapeKeyPress);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceEditFormToPointForm () {
     replace(this.#pointComponent, this.#editEventComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscapeKeyPress);
     this.#mode = Mode.DEFAULT;
   }
 
-  #escKeyDownHandler = (evt) => {
+  #handleEscapeKeyPress = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#editEventComponent.reset(this.#point);
@@ -152,7 +152,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point,
     );
-    // this.#replaceEditFormToPointForm();
   };
 
   #handleCloseButtonClick = () => {
@@ -166,6 +165,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point,
     );
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscapeKeyPress);
   };
 }

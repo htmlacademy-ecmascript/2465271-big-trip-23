@@ -4,36 +4,34 @@ import { sortDefaultByDay, displayInfoDate } from '../utils/task';
 const createTripInfoTemplate = (pointsModel) => {
   const {points, offers, destinations} = pointsModel;
 
-  const startTripDate = displayInfoDate(sortDefaultByDay(points).at(0).dateFrom);
+  const sortedTripDate = sortDefaultByDay(points);
 
-  const finishTripDate = displayInfoDate(sortDefaultByDay(points).at(-1).dateTo);
+  const startTripDate = displayInfoDate(sortedTripDate.at(0).dateFrom);
 
-  const viewTotalTripDate = () => {
-    if(startTripDate.replace(/\d/g, '') === finishTripDate.replace(/\d/g, '')) {
-      return `${startTripDate.replace(/\D+/g, '')} - ${finishTripDate}`;
-    } else {
-      return `${startTripDate} - ${finishTripDate}`;
-    }
-  };
+  const finishTripDate = displayInfoDate(sortedTripDate.at(-1).dateTo);
+
+  const viewTotalTripDate = () => `${startTripDate} - ${finishTripDate}`;
 
   const baseTotalPrise = points.reduce((acc, price) => acc + price.basePrice, 0);
 
-  const offersArray = offers.map((elem) => elem.offers).flat();
+  const offersData = offers.map((offer) => offer.offers).flat();
 
-  const offersPriceId = points.map((elem) => elem.offers).flat();
+  const offersPriceId = points.map((point) => point.offers).flat();
 
   const createOffersPrice = () => {
     const priceList = [];
     for(let i = 0; i < offersPriceId.length; i++) {
-      for(let j = 0; j < offersArray.length; j++) {
-        if(offersPriceId[i] === offersArray[j].id) {
-          priceList.push(offersArray[j].price);
+      for(let j = 0; j < offersData.length; j++) {
+        if(offersPriceId[i] === offersData[j].id) {
+          priceList.push(offersData[j].price);
         }
       }
-    } return priceList.reduce((acc, elem) => acc + elem);
+    } return priceList;
   };
 
-  const totalPrice = createOffersPrice() + baseTotalPrise;
+  const totalOffersPrice = createOffersPrice().reduce((acc, price) => acc + price, 0);
+
+  const totalPrice = totalOffersPrice + baseTotalPrise;
 
   const tripDestinationId = sortDefaultByDay(points).map((elem) => elem.destination);
 

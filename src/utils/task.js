@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { TimeType, FilterType, POINT_DATE_FORMAT, INFO_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
+import { timeType, FilterType, POINT_DATE_FORMAT, INFO_DATE_FORMAT, POINT_TIME_FORMAT, EDIT_TIME_FORMAT } from '../const';
 import { getRandomNumberElement } from './common';
 
 const getRandomDescriptionPhoto = () => `https://loremflickr.com/248/152?random=${getRandomNumberElement(1,20)}`;
@@ -17,8 +17,8 @@ const getFirstWordCapitalize = (word) => word.split(' ').map((elem) => `${elem[0
 const getDuration = (dateFrom, dateTo) => {
   const timeDurations = [
     {sign:'D', value: dayjs(dateTo).diff(dateFrom, 'd')},
-    {sign: 'H', value: dayjs(dateTo).diff(dateFrom, 'h') % TimeType.HOURS},
-    {sign: 'M', value: dayjs(dateTo).diff(dateFrom, 'm') % TimeType.MINUTES},
+    {sign: 'H', value: dayjs(dateTo).diff(dateFrom, 'h') % timeType.HOURS},
+    {sign: 'M', value: dayjs(dateTo).diff(dateFrom, 'm') % timeType.MINUTES},
   ];
   const resultDuration = [];
   for (let i = 0; i < timeDurations.length; i++) {

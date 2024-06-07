@@ -1,8 +1,8 @@
-import { EmptyMessageTextType } from '../const';
+import { emptyMessageTextType } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
 const createTripListEmptyTemplate = (filterType) => {
-  const currentPageMessageTextTipe = EmptyMessageTextType[filterType];
+  const currentPageMessageTextTipe = emptyMessageTextType[filterType];
 
   return (
     `<p class="trip-events__msg">

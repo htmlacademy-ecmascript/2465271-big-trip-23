@@ -31,7 +31,7 @@ export default class PointsModel extends Observable {
       this.#offers = [];
       this.#destinations = [];
       this._notify(UpdateType.ERROR);
-      throw new Error('Информация о маршруте недоступна. Попробуйте еще раз');
+      return;
     }
     this._notify(UpdateType.INIT);
     this.#defaultPoint = defaultEventPoint;
@@ -39,10 +39,6 @@ export default class PointsModel extends Observable {
 
   get points() {
     return this.#points;
-  }
-
-  set points(points) {
-    this.#points = points;
   }
 
   get offers() {
@@ -56,7 +52,6 @@ export default class PointsModel extends Observable {
   get defaultPoint() {
     return this.#defaultPoint;
   }
-
 
   async updatePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
