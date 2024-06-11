@@ -19,14 +19,14 @@ const createTripInfoTemplate = (pointsModel) => {
   const offersPriceId = points.map((point) => point.offers).flat();
 
   const createOffersPrice = () => {
-    const priceList = [];
+    const prices = [];
     for(let i = 0; i < offersPriceId.length; i++) {
       for(let j = 0; j < offersData.length; j++) {
         if(offersPriceId[i] === offersData[j].id) {
-          priceList.push(offersData[j].price);
+          prices.push(offersData[j].price);
         }
       }
-    } return priceList;
+    } return prices;
   };
 
   const totalOffersPrice = createOffersPrice().reduce((acc, price) => acc + price, 0);
@@ -36,14 +36,14 @@ const createTripInfoTemplate = (pointsModel) => {
   const tripDestinationId = sortDefaultByDay(points).map((elem) => elem.destination);
 
   const createTripDestinationList = () => {
-    const destinationList = [];
+    const destinationPoints = [];
     for(let i = 0; i < tripDestinationId.length; i++) {
       for(let j = 0; j < destinations.length; j++) {
         if(tripDestinationId[i] === destinations[j].id) {
-          destinationList.push(destinations[j].name);
+          destinationPoints.push(destinations[j].name);
         }
       }
-    } return destinationList;
+    } return destinationPoints;
   };
 
   const viewTripDestination = () => {

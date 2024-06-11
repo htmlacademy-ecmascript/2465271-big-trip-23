@@ -1,5 +1,5 @@
-import FilterPagePresenter from './presenter/filter-presenter';
-import MainPagePresenter from './presenter/main-presenter';
+import FilterPresenter from './presenter/filter-presenter';
+import MainPresenter from './presenter/main-presenter';
 import TripNewView from './view/trip-new-view';
 import PointsModel from './model/points-model';
 import FilterModel from './model/filter-model';
@@ -19,7 +19,7 @@ const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
 });
 
-const filterPagePresenter = new FilterPagePresenter({
+const filterPresenter = new FilterPresenter({
   filterContainer: pageTripFiltersElement,
   filterModel,
   pointsModel,
@@ -29,7 +29,7 @@ const newPointButtonComponent = new TripNewView({
   onClick: handleNewPointButtonClick
 });
 
-const mainPagePresenter = new MainPagePresenter({
+const mainPresenter = new MainPresenter({
   pointsContainer: pageMainTripEventElement,
   pointsModel,
   filterModel,
@@ -42,10 +42,10 @@ function handleNewPointFormClose() {
 }
 
 function handleNewPointButtonClick() {
-  mainPagePresenter.createPoint();
+  mainPresenter.createPoint();
   newPointButtonComponent.element.disabled = true;
 }
 
 pointsModel.init();
-mainPagePresenter.init();
-filterPagePresenter.init();
+mainPresenter.init();
+filterPresenter.init();

@@ -158,21 +158,21 @@ export default class TripCreateView extends AbstractStatefulView {
     this.element?.addEventListener('submit', this.#onFormSubmit);
     this.element?.querySelector('.event__reset-btn')?.addEventListener('click',this.#onFormDelete);
     this.element?.querySelector('.event__section')?.addEventListener('change', this.#onOffersChange);
-    this.element?.querySelector('.event__type-group')?.addEventListener('change', this.#changeEventTypeHandler);
+    this.element?.querySelector('.event__type-group')?.addEventListener('change', this.#onEventTypeChange);
     this.element?.querySelector('.event__input--price')?.addEventListener('input', this.#onPriceInput);
-    this.element?.querySelector('.event__input--destination')?.addEventListener('input', this.#changeEventDestinationHandler);
+    this.element?.querySelector('.event__input--destination')?.addEventListener('input', this.#onEventDestinationInput);
     this.#setDateFromPicker();
     this.#setDateToPicker();
   }
 
-  #changeEventTypeHandler = (evt) => {
+  #onEventTypeChange = (evt) => {
     this.updateElement({
       type: evt.target.value,
       offers: [],
     });
   };
 
-  #changeEventDestinationHandler = (evt) => {
+  #onEventDestinationInput = (evt) => {
     evt.preventDefault();
     const currentDestination = this.#destinations.find((elem) => elem.id === this._state.destination);
     const checkedDestination = this.#destinations.find((elem) => elem.name === evt.target.value);

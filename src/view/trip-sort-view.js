@@ -28,14 +28,14 @@ export default class TripSortView extends AbstractView {
     this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
 
-    this.element?.addEventListener('change', this.#sortTypeEvent);
+    this.element?.addEventListener('change', this.#onSortFormChange);
   }
 
   get template() {
     return createSortTemplate(this.#currentSortType);
   }
 
-  #sortTypeEvent = (evt) => {
+  #onSortFormChange = (evt) => {
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
 }
