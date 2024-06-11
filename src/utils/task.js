@@ -12,7 +12,7 @@ const displayEventDate = (date) => date ? dayjs(date).format(POINT_DATE_FORMAT) 
 
 const displayEditTime = (dateTime) => dateTime ? dayjs(dateTime).format(EDIT_TIME_FORMAT) : '';
 
-const getFirstWordCapitalize = (word) => word.split(' ').map((elem) => `${elem[0].toUpperCase()}${elem.slice(1).toLowerCase()}`).join('');
+const getFirstWordCapitalize = (word) => word.split(' ').map((letter) => `${letter[0].toUpperCase()}${letter.slice(1).toLowerCase()}`).join('');
 
 const getDuration = (dateFrom, dateTo) => {
   const timeDurations = [
@@ -20,24 +20,24 @@ const getDuration = (dateFrom, dateTo) => {
     {sign: 'H', value: dayjs(dateTo).diff(dateFrom, 'h') % timeType.HOURS},
     {sign: 'M', value: dayjs(dateTo).diff(dateFrom, 'm') % timeType.MINUTES},
   ];
-  const resultDuration = [];
+  const resultDurations = [];
   for (let i = 0; i < timeDurations.length; i++) {
     if (timeDurations[i].value && timeDurations[i].value < 10) {
-      resultDuration.push(`0${timeDurations[i].value}${timeDurations[i].sign} `);
+      resultDurations.push(`0${timeDurations[i].value}${timeDurations[i].sign} `);
     } else if (timeDurations[i].value && timeDurations[i].value >= 10) {
-      resultDuration.push(`${timeDurations[i].value}${timeDurations[i].sign} `);
-    } else if (!timeDurations[i].value && resultDuration.length !== 0) {
-      resultDuration.push(`00${timeDurations[i].sign} `);
+      resultDurations.push(`${timeDurations[i].value}${timeDurations[i].sign} `);
+    } else if (!timeDurations[i].value && resultDurations.length !== 0) {
+      resultDurations.push(`00${timeDurations[i].sign} `);
     }
   }
-  return resultDuration.join('');
+  return resultDurations.join('');
 };
 
-const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((a, b) => new Date (a.dateFrom).getTime() - new Date (b.dateFrom).getTime());
+const sortDefaultByDay = (tripPoints) => [...tripPoints].sort((leftPoint, rightPoint) => new Date (leftPoint.dateFrom).getTime() - new Date (rightPoint.dateFrom).getTime());
 
-const sortByPrice = (tripPoints) => [...tripPoints].sort((a, b) => b.basePrice - a.basePrice);
+const sortByPrice = (tripPoints) => [...tripPoints].sort((leftPoint, rightPoint) => rightPoint.basePrice - leftPoint.basePrice);
 
-const sortByTime = (tripPoints) => [...tripPoints].sort((a, b) => dayjs(b.dateTo).diff(dayjs(b.dateFrom)) - dayjs(a.dateTo).diff(dayjs(a.dateFrom)));
+const sortByTime = (tripPoints) => [...tripPoints].sort((leftPoint, rightPoint) => dayjs(rightPoint.dateTo).diff(dayjs(rightPoint.dateFrom)) - dayjs(leftPoint.dateTo).diff(dayjs(leftPoint.dateFrom)));
 
 const filterTripByEverything = (tripPoints) => tripPoints;
 

@@ -1,8 +1,8 @@
 import TripListView from '../view/trip-list-view';
 import TripSortView from '../view/trip-sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
-import LoadingView from '../view/trip-loading-view';
-import FailedLoadingView from '../view/trip-failed-loading-view';
+import TripLoadingView from '../view/trip-loading-view';
+import TripFailedLoadingView from '../view/trip-failed-loading-view';
 import NewPointPresenter from './new-point-presenter';
 import PointPresenter from './point-presenter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
@@ -15,7 +15,7 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-export default class MainPagePresenter {
+export default class MainPresenter {
   #pointsContainer = null;
   #pointsModel = null;
   #filterModel = null;
@@ -24,7 +24,7 @@ export default class MainPagePresenter {
   #pointsListComponent = new TripListView();
   #emptyMessageComponent = null;
   #newPointButtonComponent = null;
-  #loadingComponent = new LoadingView();
+  #loadingComponent = new TripLoadingView();
   #failedLoadingComponent = null;
 
   #currentSortType = SortTypes.DAY;
@@ -36,7 +36,6 @@ export default class MainPagePresenter {
 
   #pointPresenter = new Map();
   #newPointPresenter = null;
-  #tripInfoPresenter = null;
   #isLoading = true;
 
   constructor({pointsContainer, pointsModel, filterModel, onNewPointDestroy, newPointButtonComponent}) {
@@ -210,7 +209,7 @@ export default class MainPagePresenter {
   }
 
   #renderErrorMessage() {
-    this.#failedLoadingComponent = new FailedLoadingView();
+    this.#failedLoadingComponent = new TripFailedLoadingView();
     render(this.#failedLoadingComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 

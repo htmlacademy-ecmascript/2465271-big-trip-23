@@ -171,20 +171,20 @@ export default class TripEditView extends AbstractStatefulView {
     this.element?.querySelector('.event__reset-btn')?.addEventListener('click', this.#onFormDelete);
     this.element?.querySelector('.event__section')?.addEventListener('change', this.#onOffersChange);
     this.element?.querySelector('.event__input--price')?.addEventListener('input', this.#onPriceInput);
-    this.element?.querySelector('.event__type-group')?.addEventListener('change', this.#handleEventTypeChange);
-    this.element?.querySelector('.event__input--destination')?.addEventListener('input', this.#handleEventDestinationChange);
+    this.element?.querySelector('.event__type-group')?.addEventListener('change', this.#onEventTypeChange);
+    this.element?.querySelector('.event__input--destination')?.addEventListener('input', this.#onEventDestinationInput);
     this.#setDateFromPicker();
     this.#setDateToPicker();
   }
 
-  #handleEventTypeChange = (evt) => {
+  #onEventTypeChange = (evt) => {
     this.updateElement({
       type: evt.target.value,
       offers: [],
     });
   };
 
-  #handleEventDestinationChange = (evt) => {
+  #onEventDestinationInput = (evt) => {
     evt.preventDefault();
     const currentDestination = this.#destinations.find((elem) => elem.id === this._state.destination);
     const checkedDestination = this.#destinations.find((elem) => elem.name === evt.target.value);
