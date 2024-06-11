@@ -6,7 +6,7 @@ const createFailedLoadPointsTemplate = () =>
   </p>`;
 
 
-export default class FailedLoadingView extends AbstractView {
+export default class TripFailedLoadingView extends AbstractView {
 
   get template() {
     return createFailedLoadPointsTemplate();

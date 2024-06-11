@@ -4,7 +4,7 @@ import { render, replace, remove } from '../framework/render';
 import { filter } from '../utils/task';
 import { FilterType, UpdateType } from '../const';
 
-export default class FilterPagePresenter {
+export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointsModel = null;

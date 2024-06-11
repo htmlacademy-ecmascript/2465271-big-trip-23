@@ -69,22 +69,22 @@ export default class TripPointView extends AbstractView {
     this.#handleFavoriteClick = onFavoriteClick;
 
     this.element?.querySelector('.event__rollup-btn')
-      ?.addEventListener('click', this.#handleEditClick);
+      ?.addEventListener('click', this.#onEventRollButtonClick);
 
     this.element?.querySelector('.event__favorite-btn')
-      ?.addEventListener('click', this.#handleFavoriteButtonClick);
+      ?.addEventListener('click', this.#onFavoriteButtonClick);
   }
 
   get template() {
     return createTripPointTemplate(this.#offers, this.#destinations, this.#point);
   }
 
-  #handleEditClick = (evt) => {
+  #onEventRollButtonClick = (evt) => {
     evt.preventDefault();
     this.#handleTripEditClick();
   };
 
-  #handleFavoriteButtonClick = (evt) => {
+  #onFavoriteButtonClick = (evt) => {
     evt.preventDefault();
     this.#handleFavoriteClick();
   };
